@@ -20,7 +20,7 @@ export default function ModalInicio({ show, onClose, onSelect }) {
         </div>
 
         <div className="flex justify-between gap-2">
-          {/* Botón Gastronomía */}
+       
           <button
             onClick={() => handleSelect('gastronomia')}
             className="flex-1 flex flex-col items-center gap-1 bg-white hover:bg-amber-50 border cursor-pointer  border-amber-100 rounded-xl p-3 transition-all hover:shadow-md"
@@ -29,7 +29,7 @@ export default function ModalInicio({ show, onClose, onSelect }) {
             <span className="text-sm font-medium text-gray-700">Gastronomía</span>
           </button>
 
-          {/* Botón Playas */}
+      
           <button
             onClick={() => handleSelect('playa')}
             className="flex-1 flex flex-col items-center gap-1 cursor-pointer bg-white hover:bg-blue-50 border border-blue-100 rounded-xl p-1 transition-all hover:shadow-md"
@@ -38,7 +38,6 @@ export default function ModalInicio({ show, onClose, onSelect }) {
             <span className="text-sm font-medium text-gray-700">Playas</span>
           </button>
 
-          {/* Botón Pueblos Mágicos */}
           <button
             onClick={() => handleSelect('pueblos')}
             className="flex-1 flex flex-col items-center gap-1 bg-white hover:bg-purple-50 border cursor-pointer border-purple-100 rounded-xl p-3 transition-all hover:shadow-md"
@@ -48,7 +47,7 @@ export default function ModalInicio({ show, onClose, onSelect }) {
           </button>
         </div>
 
-        {/* Botón Cerrar (sin cambios) */}
+       
         <button
           onClick={onClose}
           className="mt-6 mx-auto px-4 py-2 text-gray-500 hover:text-gray-700 cursor-pointer transition font-medium text-sm"
