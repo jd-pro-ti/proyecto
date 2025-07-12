@@ -4,10 +4,10 @@ import { useState } from 'react';
 
 export default function ModalPlaya({ show, onClose, onNext }) {
   const opciones = [
-    { id: 'desayuno', label: 'Desayuno', icon: '/imagenes/gastro/gastro11.svg' },
-    { id: 'comida', label: 'Comida', icon: '/imagenes/gastro/gastro12.svg' },
-    { id: 'cena', label: 'Cena', icon: '/imagenes/gastro/gastro13.svg' },
-    { id: 'todo el dia', label: 'Todo el dia', icon: '/imagenes/gastro/gastro14.svg' },
+    { id: 'solo', label: 'Solo/a', icon: '/imagenes/playa/playa16.svg' },
+    { id: 'en pareja', label: 'En pareja', icon: '/imagenes/playa/playa17.svg' },
+    { id: 'familia', label: 'Familia', icon: '/imagenes/playa/playa18.svg' },
+    { id: 'con amigos', label: 'Con amigos', icon: '/imagenes/playa/playa19.svg' },
   ];
 
   const [seleccionadas, setSeleccionadas] = useState([]);
@@ -38,7 +38,7 @@ export default function ModalPlaya({ show, onClose, onNext }) {
         }`}
       >
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">¿En que momento prefieres comer?</h2>
+          <h2 className="text-2xl font-bold text-gray-800">¿Con quien viajas?</h2>
           <p className="text-gray-500 mt-2 text-sm">Elige una o más opciones</p>
         </div>
 
@@ -83,7 +83,7 @@ export default function ModalPlaya({ show, onClose, onNext }) {
                 alt={opcion.label} 
                 className="w-12 h-12 object-contain"
               />
-              <span className="text-xs font-medium text-gray-700 text-center">
+              <span className="text-xs font-medium text-gray-700 text-center"> 
                 {opcion.label}
               </span>
             </button>

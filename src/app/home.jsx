@@ -6,6 +6,10 @@ import ModalSelector from './modals/modalSelector';
 export default function Home() {
   const [start, setStart] = useState(false);
 
+  const handleFinish = () => {
+    setStart(false); // vuelve a mostrar el botón
+  };
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white-100 p-6">
       {!start && (
@@ -17,7 +21,7 @@ export default function Home() {
         </button>
       )}
 
-      {start && <ModalSelector />}
+      {start && <ModalSelector onFinish={""} />}
     </main>
   );
 }

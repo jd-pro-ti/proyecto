@@ -43,7 +43,7 @@ export default function ModalPlaya({ show, onClose, onNext }) {
           <p className="text-gray-500 mt-2 text-sm">Elige una o más opciones</p>
         </div>
 
-        {/* Primera fila horizontal */}
+        {/* Primera fila horizontal  */}
         <div className="flex justify-center gap-3 mb-3">
           {fila1.map((opcion) => (
             <button
@@ -92,6 +92,12 @@ export default function ModalPlaya({ show, onClose, onNext }) {
         </div>
 
         <div className="flex justify-between gap-4">
+          <button
+            onClick={onClose}
+            className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border cursor-pointer border-gray-300 hover:bg-gray-100 transition"
+          >
+            Cerrar
+          </button>
           <button
             onClick={onClose}
             className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border cursor-pointer border-gray-300 hover:bg-gray-100 transition"

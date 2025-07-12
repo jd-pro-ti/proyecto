@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function ModalPlaya({ show, onClose, onNext }) {
+export default function ModalPlaya1({ show, onClose, onNext, onBack }) {
   const opciones = [
     { id: 'tranquilidad', label: 'Tranquilidad', icon: '/imagenes/playa/playa1.svg' },
     { id: 'aventura', label: 'Aventura', icon: '/imagenes/playa/playa2.svg' },
@@ -97,6 +97,12 @@ export default function ModalPlaya({ show, onClose, onNext }) {
             className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border cursor-pointer border-gray-300 hover:bg-gray-100 transition"
           >
             Cerrar
+          </button>
+          <button
+            onClick={onBack}
+            className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border cursor-pointer border-gray-300 hover:bg-gray-100 transition"
+          >
+            Volver
           </button>
           <button
             onClick={handleSiguiente}
