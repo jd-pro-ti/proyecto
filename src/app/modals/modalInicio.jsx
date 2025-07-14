@@ -9,7 +9,7 @@ export default function ModalInicio({ show, onClose, onSelect }) {
   const destinos = {
     playa: ['Lazaro Cardenas', 'Caleta de Campos', 'Maruata'],
     pueblos_magicos: ['Patzcuaro', 'Tlalpujahua', 'Cuitzeo'],
-    pueblos: ['Zamora', 'La Piedad', 'Los Reyes'],
+    pueblos: ['Charo', 'Tacambaro', 'Turicato', 'Zinapecuaro'],
   };
 
   const allLugares = Object.entries(destinos).flatMap(([tipo, lugares]) =>
@@ -34,7 +34,15 @@ export default function ModalInicio({ show, onClose, onSelect }) {
   };
 
   const tipo = tipoMap[lugar.tipo] || 'inicio';
-  onSelect(tipo, 2); // ← saltamos al segundo modal si viene de búsqueda
+  if (tipo === 'pueblos') {
+    onSelect('pueblos', 3); // ← Ir directo al modal 3 para pueblos normales
+  } else if( tipo === 'playa') {
+    onSelect('playa', 2); // ← Ir directo al modal 2 para
+  } else if (tipo === 'pueblosMagicos') {
+    onSelect(tipo, 2); // ← Modal 2 para playas y pueblos mágicos
+  }
+  
+
 };
 
 

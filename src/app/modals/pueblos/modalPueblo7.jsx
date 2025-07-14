@@ -3,12 +3,27 @@ import { useState } from 'react';
 
 export default function ModalPuebloMa4({ show, onClose, onNext, onBack }) {
   const [respuesta, setRespuesta] = useState(null);
+  const [nombre, setNombre] = useState('');
+  const [mostrarInput, setMostrarInput] = useState(false);
+
+  const handleRespuesta = (resp) => {
+    setRespuesta(resp);
+    setMostrarInput(resp === true);
+    if (resp === false) {
+      setNombre(''); // Limpiar nombre si selecciona No
+    }
+  };
 
   const handleSiguiente = () => {
+    if (respuesta === true && nombre.trim() === '') {
+      alert('Por favor ingresa tu nombre para continuar con la reservación');
+      return;
+    }
+
     if (respuesta === true) {
-      onNext(); // Siguiente normal
+      onNext({ nombre }); // Enviamos el nombre junto con la acción
     } else if (respuesta === false) {
-      onNext(8); // Saltar a modal 7
+      onNext(8); // Saltar a modal 8
     }
   };
 
@@ -20,14 +35,14 @@ export default function ModalPuebloMa4({ show, onClose, onNext, onBack }) {
         }`}
       >
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">¿Te quieres hospedar?</h2>
-          <p className="text-gray-500 mt-2 text-sm">Recibe recomendaciones personalizadas</p>
+          <h2 className="text-2xl font-bold text-gray-800">¿Te gustaría seguir con la reservación?</h2>
+          <p className="text-gray-500 mt-2 text-sm">Selecciona una opción para continuar</p>
         </div>
 
         {/* Botones Sí/No */}
-        <div className="flex justify-center gap-4 mb-8">
+        <div className="flex justify-center gap-4 mb-6">
           <button
-            onClick={() => setRespuesta(true)}
+            onClick={() => handleRespuesta(true)}
             className={`px-6 py-3 rounded-lg font-medium transition ${
               respuesta === true
                 ? 'bg-green-600 text-white shadow-md'
@@ -37,7 +52,7 @@ export default function ModalPuebloMa4({ show, onClose, onNext, onBack }) {
             Sí
           </button>
           <button
-            onClick={() => setRespuesta(false)}
+            onClick={() => handleRespuesta(false)}
             className={`px-6 py-3 rounded-lg font-medium transition ${
               respuesta === false
                 ? 'bg-red-600 text-white shadow-md'
@@ -47,6 +62,23 @@ export default function ModalPuebloMa4({ show, onClose, onNext, onBack }) {
             No
           </button>
         </div>
+
+        {/* Input para nombre (solo visible si selecciona Sí) */}
+        {mostrarInput && (
+          <div className="mb-6 animate-fadeIn">
+            <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">
+              Ingresa tu nombre para la reservación
+            </label>
+            <input
+              type="text"
+              id="nombre"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-black transition"
+              placeholder="Nombre"
+            />
+          </div>
+        )}
 
         <div className="flex justify-between gap-2">
           <button
@@ -63,9 +95,9 @@ export default function ModalPuebloMa4({ show, onClose, onNext, onBack }) {
           </button>
           <button
             onClick={handleSiguiente}
-            disabled={respuesta === null}
+            disabled={respuesta === null || (respuesta === true && nombre.trim() === '')}
             className={`flex-1 px-4 py-2 rounded-lg font-medium transition ${
-              respuesta === null
+              respuesta === null || (respuesta === true && nombre.trim() === '')
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg'
             }`}

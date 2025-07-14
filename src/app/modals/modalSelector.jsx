@@ -11,7 +11,6 @@ import ModalPlaya4 from './playas/modalPlaya4';
 import ModalPlaya5 from './playas/modalPlaya5';
 import ModalPlaya6 from './playas/modalPlaya6';
 
-
 // Pueblos Mágicos
 import ModalPuebloMa1 from './pueblosMagicos/modalPuebloMa1';
 import ModalPuebloMa2 from './pueblosMagicos/modalPuebloMa2';
@@ -21,24 +20,26 @@ import ModalPuebloMa5 from './pueblosMagicos/modalPuebloMa5';
 import ModalPuebloMa6 from './pueblosMagicos/modalPuebloMa6';
 import ModalPuebloMa7 from './pueblosMagicos/modalPuebloMa7';
 
-
 // Pueblos
 import ModalPueblo1 from './pueblos/modalPueblo1';
 import ModalPueblo2 from './pueblos/modalPueblo2';
 import ModalPueblo3 from './pueblos/modalPueblo3';
 import ModalPueblo4 from './pueblos/modalPueblo4';
 import ModalPueblo5 from './pueblos/modalPueblo5';
-
+import ModalPueblo6 from './pueblos/modalPueblo6';
+import ModalPueblo7 from './pueblos/modalPueblo7';
+import ModalPueblo8 from './pueblos/modalPueblo8';
 
 export default function ModalSelector({ onFinish }) {
-  const [step, setStep] = useState('inicio'); 
+  const [step, setStep] = useState('inicio');
   const [modalIndex, setModalIndex] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
   const [show, setShow] = useState(false);
   const [startedFromSearch, setStartedFromSearch] = useState(false);
+  const [searchStartIndex, setSearchStartIndex] = useState(null);
+  const [categoriaPueblo, setCategoriaPueblo] = useState(null);
   const [fromHospedajeSalto, setFromHospedajeSalto] = useState(false);
-
-
+  const [previousModalBeforeSalto, setPreviousModalBeforeSalto] = useState(null);
 
   useEffect(() => {
     openModal();
@@ -49,124 +50,232 @@ export default function ModalSelector({ onFinish }) {
     setTimeout(() => setShow(true), 30);
   };
 
-
- const goToCategory = (category, index = 1) => {
-  closeModal();
-  setTimeout(() => {
-    setStartedFromSearch(index > 1); 
-    setStep(category);
-    setModalIndex(index);
-    openModal();
-  }, 350);
-};
-
-
-
   const closeModal = () => {
     setShow(false);
     setTimeout(() => {
       setIsOpen(false);
-      if (onFinish) onFinish(); 
+      if (onFinish) onFinish();
     }, 300);
   };
 
-  const nextModal = (forceIndex = null) => {
+  // Solución para que la búsqueda con el input de 'playa' salte directamente al ModalPlaya2 (index = 2)
+
+const goToCategory = (category, index = 1) => {
   closeModal();
+
   setTimeout(() => {
-    const maxIndexByStep = {
-      playa: 6,
-      pueblosMagicos: 7,
-      pueblos: 5,
-    };
-
-    const maxIndex = maxIndexByStep[step] || 5;
-
-    const validForceIndex = typeof forceIndex === 'number' ? forceIndex : null;
-
-    if (validForceIndex !== null) {
-      if (step === 'pueblosMagicos' && modalIndex === 4 && validForceIndex === 7) {
-        setFromHospedajeSalto(true);
+    // Si el índice de inicio es > 1, activamos el flag para que trasModal sepa que viene de una búsqueda
+    if (index > 1) {
+        setStartedFromSearch(true);
+        setSearchStartIndex(index);
       } else {
-        setFromHospedajeSalto(false);
+        setStartedFromSearch(false);
+        setSearchStartIndex(null);
       }
-      setModalIndex(validForceIndex);
-      openModal();
-    } else if (modalIndex < maxIndex) {
-      setModalIndex((prev) => prev + 1);
-      setFromHospedajeSalto(false); 
-      openModal();
+
+    // Configuramos la categoría y el índice según la búsqueda
+    if (category === 'pueblos') {
+      setCategoriaPueblo(null);
+      setStep('pueblos');
+      setModalIndex(index); // index podría ser 3 si se elige desde búsqueda
+    } else if (
+      ['Coloniales', 'naturaleza', 'artesanias', 'gastronomia', 'pueblos magicos'].includes(category)
+    ) {
+      setCategoriaPueblo(category);
+      setStep('pueblos');
+      setModalIndex(index); // igual para subcategorías
+    } else if (category === 'playa') {
+      setStep('playa');
+      setModalIndex(index); // <<--- aquí se permite que vaya directamente al modal 2
+    } else if (category === 'pueblosMagicos') {
+      setStep('pueblosMagicos');
+      setModalIndex(index);
     } else {
       setStep('inicio');
       setModalIndex(1);
-      setFromHospedajeSalto(false);
-      setStartedFromSearch(false);
-      openModal();
     }
+
+    openModal();
   }, 350);
 };
 
+// Asegúrate de que al hacer la búsqueda con el input de 'playa', estés pasando index = 2:
+// Por ejemplo:
+// goToCategory('playa', 2);
 
 
-const trasModal = () => {
-  closeModal();
-  setTimeout(() => {
-    if (modalIndex === 7 && fromHospedajeSalto) {
-      setModalIndex(4);
-      setFromHospedajeSalto(false); 
-      openModal();
-      return;
-    }
+  const nextModal = (forceIndex = null) => {
+    closeModal();
+    setTimeout(() => {
+      const maxIndexByStep = {
+        playa: 6,
+        pueblosMagicos: 7,
+        pueblos: 8,
+      };
 
-    if (modalIndex > 1) {
+      const maxIndex = maxIndexByStep[step] || 5;
+
+      if (typeof forceIndex === 'number') {
+        // Guardar modal anterior SOLO si es salto especial
+        if (
+          (step === 'pueblos' && modalIndex === 5 && forceIndex === 8) ||
+          (step === 'pueblosMagicos' && modalIndex === 4 && forceIndex === 7)
+        ) {
+          setFromHospedajeSalto(true);
+          setPreviousModalBeforeSalto(modalIndex);
+        } else {
+          setFromHospedajeSalto(false);
+          setPreviousModalBeforeSalto(null);
+        }
+
+        setModalIndex(forceIndex);
+        openModal();
+      } else if (modalIndex < maxIndex) {
+        setModalIndex((prev) => prev + 1);
+        setFromHospedajeSalto(false);
+        setPreviousModalBeforeSalto(null);
+        openModal();
+      } else {
+        setStep('inicio');
+        setModalIndex(1);
+        setFromHospedajeSalto(false);
+        setPreviousModalBeforeSalto(null);
+        setStartedFromSearch(false);
+        setSearchStartIndex(null);
+        openModal();
+      }
+    }, 350);
+  };
+
+  const trasModal = () => {
+    closeModal();
+    setTimeout(() => {
+      // Salto especial (Hospedaje)
+      if (fromHospedajeSalto && previousModalBeforeSalto !== null) {
+        setModalIndex(previousModalBeforeSalto);
+        setFromHospedajeSalto(false);
+        setPreviousModalBeforeSalto(null);
+        openModal();
+        return;
+      }
+
+      // Retroceder paso a paso hasta el índice donde comenzó la búsqueda
+      if (startedFromSearch && searchStartIndex !== null) {
+        if (modalIndex > searchStartIndex) {
+          setModalIndex((prev) => prev - 1);
+          openModal();
+          return;
+        } else {
+          // Ya en el índice inicial de búsqueda, regresar a inicio
+          setStep('inicio');
+          setModalIndex(1);
+          setStartedFromSearch(false);
+          setSearchStartIndex(null);
+          openModal();
+          return;
+        }
+      }
+
+      // Si estamos en el primer modal normal, regresar a inicio
+      if (modalIndex === 1) {
+        setStep('inicio');
+        setModalIndex(1);
+        setStartedFromSearch(false);
+        setFromHospedajeSalto(false);
+        setPreviousModalBeforeSalto(null);
+        setSearchStartIndex(null);
+        openModal();
+        return;
+      }
+
+      // Retroceso normal paso a paso
       setModalIndex((prev) => prev - 1);
       openModal();
-    } else {
-      setStep('inicio');
-      setModalIndex(1);
-      setStartedFromSearch(false);
-      setFromHospedajeSalto(false);
-      openModal();
-    }
-  }, 350);
-};
-
-
-
+    }, 350);
+  };
 
   return (
     <>
       {/* Modal de inicio */}
       {isOpen && step === 'inicio' && (
-        <ModalInicio
-          show={show}
-          onClose={closeModal}
-          onSelect={goToCategory}
-        />
+        <ModalInicio show={show} onClose={closeModal} onSelect={goToCategory} />
       )}
 
       {/* Playa */}
-      {isOpen && step === 'playa' && modalIndex === 1 && <ModalPlaya1 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory}/>}
-      {isOpen && step === 'playa' && modalIndex === 2 && <ModalPlaya2 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal}onSelect={goToCategory}/>}
-      {isOpen && step === 'playa' && modalIndex === 3 && <ModalPlaya3 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal}onSelect={goToCategory}/>}
-      {isOpen && step === 'playa' && modalIndex === 4 && <ModalPlaya4 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal}onSelect={goToCategory}/>}
-      {isOpen && step === 'playa' && modalIndex === 5 && <ModalPlaya5 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal}onSelect={goToCategory}/>}
-      {isOpen && step === 'playa' && modalIndex === 6 && <ModalPlaya6 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal}onSelect={goToCategory}/>}
+      {isOpen && step === 'playa' && modalIndex === 1 && (
+        <ModalPlaya1 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'playa' && modalIndex === 2 && (
+        <ModalPlaya2 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'playa' && modalIndex === 3 && (
+        <ModalPlaya3 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'playa' && modalIndex === 4 && (
+        <ModalPlaya4 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'playa' && modalIndex === 5 && (
+        <ModalPlaya5 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'playa' && modalIndex === 6 && (
+        <ModalPlaya6 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
 
       {/* Pueblos Magicos */}
-      {isOpen && step === 'pueblosMagicos' && modalIndex === 1 && <ModalPuebloMa1 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory}/>}
-      {isOpen && step === 'pueblosMagicos' && modalIndex === 2 && <ModalPuebloMa2 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory}/>}
-      {isOpen && step === 'pueblosMagicos' && modalIndex === 3 && <ModalPuebloMa3 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory}/>}
-      {isOpen && step === 'pueblosMagicos' && modalIndex === 4 && <ModalPuebloMa4 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory}/>}
-      {isOpen && step === 'pueblosMagicos' && modalIndex === 5 && <ModalPuebloMa5 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory}/>}
-      {isOpen && step === 'pueblosMagicos' && modalIndex === 6 && <ModalPuebloMa6 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory}/>}
-      {isOpen && step === 'pueblosMagicos' && modalIndex === 7 && <ModalPuebloMa7 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory}/>}
+      {isOpen && step === 'pueblosMagicos' && modalIndex === 1 && (
+        <ModalPuebloMa1 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblosMagicos' && modalIndex === 2 && (
+        <ModalPuebloMa2 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblosMagicos' && modalIndex === 3 && (
+        <ModalPuebloMa3 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblosMagicos' && modalIndex === 4 && (
+        <ModalPuebloMa4 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblosMagicos' && modalIndex === 5 && (
+        <ModalPuebloMa5 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblosMagicos' && modalIndex === 6 && (
+        <ModalPuebloMa6 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblosMagicos' && modalIndex === 7 && (
+        <ModalPuebloMa7 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
 
       {/* Pueblos*/}
-      {isOpen && step === 'pueblos' && modalIndex === 1 && <ModalPueblo1 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal}/>}
-      {isOpen && step === 'pueblos' && modalIndex === 2 && <ModalPueblo2 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal}/>}
-      {isOpen && step === 'pueblos' && modalIndex === 3 && <ModalPueblo3 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal}/>}
-      {isOpen && step === 'pueblos' && modalIndex === 4 && <ModalPueblo4 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal}/>}
-      {isOpen && step === 'pueblos' && modalIndex === 5 && <ModalPueblo5 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal}/>}
+      {isOpen && step === 'pueblos' && modalIndex === 1 && (
+        <ModalPueblo1 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblos' && modalIndex === 2 && (
+        <ModalPueblo2
+          show={show}
+          onClose={closeModal}
+          onNext={nextModal}
+          onBack={trasModal}
+          onSelect={goToCategory}
+          categoriaSeleccionada={categoriaPueblo}
+        />
+      )}
+      {isOpen && step === 'pueblos' && modalIndex === 3 && (
+        <ModalPueblo3 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblos' && modalIndex === 4 && (
+        <ModalPueblo4 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblos' && modalIndex === 5 && (
+        <ModalPueblo5 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblos' && modalIndex === 6 && (
+        <ModalPueblo6 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblos' && modalIndex === 7 && (
+        <ModalPueblo7 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblos' && modalIndex === 8 && (
+        <ModalPueblo8 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
     </>
   );
 }

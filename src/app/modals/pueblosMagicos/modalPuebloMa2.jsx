@@ -56,7 +56,7 @@ export default function ModalPueblosMagicos({ show, onClose, onNext, onBack }) {
               <button
                 key={opcion.id}
                 onClick={() => toggleOpcion(opcion.id)}
-                className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${
+                className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer${
                   seleccion === opcion.id
                     ? 'border-green-500 bg-green-50 shadow-inner'
                     : 'border-gray-200 hover:border-green-300 bg-white'

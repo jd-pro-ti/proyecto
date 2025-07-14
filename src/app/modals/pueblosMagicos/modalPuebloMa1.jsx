@@ -74,7 +74,7 @@ export default function ModalPueblosMagicos({ show, onClose, onNext, onBack }) {
           </button>
           <button
             onClick={handleSiguiente}
-            disabled={!seleccionado} // Deshabilitado si no hay selección
+            disabled={!seleccionado} 
             className={`flex-1 px-4 py-2 rounded-lg font-medium transition ${
               !seleccionado
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
