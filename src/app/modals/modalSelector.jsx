@@ -10,6 +10,7 @@ import ModalPlaya3 from './playas/modalPlaya3';
 import ModalPlaya4 from './playas/modalPlaya4';
 import ModalPlaya5 from './playas/modalPlaya5';
 import ModalPlaya6 from './playas/modalPlaya6';
+import ModalPlaya7 from './playas/modalplaya7';
 
 // Pueblos Mágicos
 import ModalPuebloMa1 from './pueblosMagicos/modalPuebloMa1';
@@ -108,7 +109,7 @@ const goToCategory = (category, index = 1) => {
     closeModal();
     setTimeout(() => {
       const maxIndexByStep = {
-        playa: 6,
+        playa: 7,
         pueblosMagicos: 7,
         pueblos: 8,
       };
@@ -219,6 +220,9 @@ const goToCategory = (category, index = 1) => {
       )}
       {isOpen && step === 'playa' && modalIndex === 6 && (
         <ModalPlaya6 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'playa' && modalIndex === 7 && (
+      <ModalPlaya7 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
       )}
 
       {/* Pueblos Magicos */}

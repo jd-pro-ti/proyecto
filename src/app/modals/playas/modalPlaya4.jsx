@@ -1,109 +1,73 @@
 'use client';
-
 import { useState } from 'react';
 
-export default function ModalPlaya({ show, onClose, onNext }) {
-  const opciones = [
-    { id: 'solo', label: 'Solo/a', icon: '/imagenes/playa/playa16.svg' },
-    { id: 'en pareja', label: 'En pareja', icon: '/imagenes/playa/playa17.svg' },
-    { id: 'familia', label: 'Familia', icon: '/imagenes/playa/playa18.svg' },
-    { id: 'con amigos', label: 'Con amigos', icon: '/imagenes/playa/playa19.svg' },
-  ];
-
-  const [seleccionadas, setSeleccionadas] = useState([]);
-
-  const toggleOpcion = (opcion) => {
-    setSeleccionadas((prev) =>
-      prev.includes(opcion)
-        ? prev.filter((o) => o !== opcion)
-        : [...prev, opcion]
-    );
-  };
+export default function ModalPuebloMa4({ show, onClose, onNext, onBack }) {
+  const [respuesta, setRespuesta] = useState(null);
 
   const handleSiguiente = () => {
-    if (seleccionadas.length > 0) {
-      onNext(seleccionadas);
+    if (respuesta === true) {
+      onNext(); // Siguiente normal
+    } else if (respuesta === false) {
+      onNext(7); // Saltar a modal 7
     }
   };
-
-  
-  const fila1 = opciones.slice(0, 3); 
-  const fila2 = opciones.slice(3);    
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300">
       <div
-        className={`bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300 ${
+        className={`bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-md shadow-xl transform transition-all duration-300 ${
           show ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
         }`}
       >
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">¿Con quien viajas?</h2>
-          <p className="text-gray-500 mt-2 text-sm">Elige una o más opciones</p>
+          <h2 className="text-2xl font-bold text-gray-800">¿Te quieres hospedar?</h2>
+          <p className="text-gray-500 mt-2 text-sm">Recibe recomendaciones personalizadas</p>
         </div>
 
-        {/* Primera fila horizontal */}
-        <div className="flex justify-center gap-3 mb-3">
-          {fila1.map((opcion) => (
-            <button
-              key={opcion.id}
-              onClick={() => toggleOpcion(opcion.id)}
-              className={`flex flex-col items-center justify-center cursor-pointer gap-1 p-3 rounded-xl border-2 min-w-[100px] transition-all ${
-                seleccionadas.includes(opcion.id)
-                   ? 'border-green-500 shadow-inner'
-                  : 'border-gray-200 hover:border-green-300 bg-white'
-              }`}
-            >
-              <img 
-                src={opcion.icon} 
-                alt={opcion.label} 
-                className="w-12 h-12 object-contain"
-              />
-              <span className="text-xs font-medium text-gray-700 text-center">
-                {opcion.label}
-              </span>
-            </button>
-          ))}
+        {/* Botones Sí/No */}
+        <div className="flex justify-center gap-4 mb-8">
+          <button
+            onClick={() => setRespuesta(true)}
+            className={`px-6 py-3 rounded-lg font-medium transition ${
+              respuesta === true
+                ? 'bg-green-600 text-white shadow-md'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Sí
+          </button>
+          <button
+            onClick={() => setRespuesta(false)}
+            className={`px-6 py-3 rounded-lg font-medium transition ${
+              respuesta === false
+                ? 'bg-red-600 text-white shadow-md'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            No
+          </button>
         </div>
 
-        {/* Segunda fila horizontal */}
-        <div className="flex justify-center gap-3 mb-6">
-          {fila2.map((opcion) => (
-            <button
-              key={opcion.id}
-              onClick={() => toggleOpcion(opcion.id)}
-              className={`flex flex-col items-center justify-center gap-1 p-3 rounded-xl border-2 min-w-[100px] transition-all cursor-pointer ${
-                seleccionadas.includes(opcion.id)
-                  ? 'border-green-500 shadow-inner'
-                  : 'border-gray-200 hover:border-green-300 bg-white'
-              }`}
-            >
-              <img 
-                src={opcion.icon} 
-                alt={opcion.label} 
-                className="w-12 h-12 object-contain"
-              />
-              <span className="text-xs font-medium text-gray-700 text-center">
-                {opcion.label}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        <div className="flex justify-between gap-4">
+        <div className="flex justify-between gap-2">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border cursor-pointer border-gray-300 hover:bg-gray-100 transition"
+            className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border border-gray-300 hover:bg-gray-100 transition"
           >
             Cerrar
           </button>
           <button
+            onClick={onBack}
+            className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border border-gray-300 hover:bg-gray-100 transition"
+          >
+            Volver
+          </button>
+          <button
             onClick={handleSiguiente}
-            disabled={seleccionadas.length === 0}
+            disabled={respuesta === null}
             className={`flex-1 px-4 py-2 rounded-lg font-medium transition ${
-              seleccionadas.length === 0
+              respuesta === null
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-white-600 hover:bg-green-700 text-black shadow-md hover:shadow-lg'
+                : 'bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg'
             }`}
           >
             Siguiente
