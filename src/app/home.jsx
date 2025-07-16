@@ -21,7 +21,7 @@ export default function Home() {
         </button>
       )}
 
-      {start && <ModalSelector onFinish={""} />}
+      {start && <ModalSelector onFinish={handleFinish} />}
     </main>
   );
 }

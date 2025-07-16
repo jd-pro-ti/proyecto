@@ -51,15 +51,15 @@ export default function ModalSelector({ onFinish }) {
     setTimeout(() => setShow(true), 30);
   };
 
-  const closeModal = () => {
-    setShow(false);
-    setTimeout(() => {
-      setIsOpen(false);
-      if (onFinish) onFinish();
-    }, 300);
-  };
+  const closeModal = (finalizar = false) => {
+  setShow(false);
+  setTimeout(() => {
+    setIsOpen(false);
+    if (finalizar && onFinish) onFinish(); // Solo si se indica que es cierre final
+  }, 300);
+};
 
-  // Solución para que la búsqueda con el input de 'playa' salte directamente al ModalPlaya2 (index = 2)
+
 
 const goToCategory = (category, index = 1) => {
   closeModal();
@@ -143,7 +143,7 @@ const goToCategory = (category, index = 1) => {
         setPreviousModalBeforeSalto(null);
         setStartedFromSearch(false);
         setSearchStartIndex(null);
-        openModal();
+        closeModal(true);
       }
     }, 350);
   };
