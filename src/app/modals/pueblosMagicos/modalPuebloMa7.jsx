@@ -81,7 +81,7 @@ export default function ModalPueblosMagicos({ show, onClose, onNext, onBack }) {
             onClick={() => onNext()}
             className="flex-1 px-4 py-2 rounded-lg font-medium transition bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg"
           >
-            Salir
+            Siguiente
           </button>
         </div>
       </div>
