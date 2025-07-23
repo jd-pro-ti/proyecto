@@ -2,67 +2,63 @@
 import { useState } from 'react';
 
 export default function ModalPueblosMagicos({ show, onClose, onNext, onBack }) {
-  const fiestas = [
-    { 
-      id: 'fiesta-1', 
-      nombre: 'Fiesta de la Virgen del Carmen', 
-      fecha: '16 de Julio', 
-      descripcion: 'Procesiones, fuegos artificiales y danzas tradicionales',
-      imagen: '/imagenes/puebloMagico/fiesta1.jpeg',
-      destacado: 'Evento principal: Peregrinación al santuario'
-    },
-    { 
-      id: 'fiesta-2', 
-      nombre: 'Festival de la Esfera', 
-      fecha: 'Del 10 al 20 de Julio', 
-      descripcion: 'Celebración de la artesanía local de esferas navideñas',
-      imagen: '/imagenes/puebloMagico/fiesta2.jpeg',
-      destacado: 'Talleres artesanales y exposiciones'
-    },
-    { 
-      id: 'fiesta-3', 
-      nombre: 'Feria del Durazno', 
-      fecha: 'Última semana de Julio', 
-      descripcion: 'Festival gastronómico con productos locales',
-      imagen: '/imagenes/puebloMagico/fiesta3.jpeg',
-      destacado: 'Degustaciones y concursos culinarios'
-    }
-  ];
+  // Solo el evento Feria Internacional de la Guitarra en Paracho
+  const fiesta = {
+    id: 'fiesta-2',
+    nombre: 'Feria Internacional de la Guitarra en Paracho',
+    fecha: 'Del 6 al 14 de julio',
+    descripcion: 'Festival cultural donde artesanos, músicos y visitantes celebran la tradición guitarrera de Paracho.',
+    imagen: '/imagenes/puebloMagico/Fiesta1.jpg',
+    destacado: 'Evento principal: Concurso de Guitarra',
+    lugar: 'Paracho, Michoacán',
+    horario: '10:00 AM - 10:00 PM',
+    actividades: [
+      'Exhibición de guitarras artesanales',
+      'Conciertos en vivo',
+      'Talleres de fabricación de guitarra',
+      'Concursos y premiaciones',
+      'Gastronomía local',
+    ],
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300">
-      <div className={`bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300 ${show ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">Según la fecha sugerida, estas son las fiestas patronales de Tlalpujahua</h2>
-          <p className="text-gray-500 mt-2 text-sm">Conoce las fiestas disponibles</p>
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300 ${
+        show ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+      }`}
+    >
+      <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-xl shadow-xl transform transition-all duration-300">
+        <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
+          {fiesta.nombre}
+        </h2>
+
+        <img
+          src={fiesta.imagen}
+          alt={fiesta.nombre}
+          className="w-full h-56 object-cover rounded-lg mb-6 shadow-md"
+        />
+
+        <div className="mb-4 text-center text-green-700 font-semibold">
+          {fiesta.fecha} &bull; {fiesta.horario}
         </div>
 
-        {/* Contenedor de fiestas (ahora divs en lugar de botones) */}
-        <div className="space-y-4 max-h-[400px] overflow-y-auto mb-6 p-2">
-          {fiestas.map((fiesta) => (
-            <div
-              key={fiesta.id}
-              className="w-full flex items-start gap-4 p-3 rounded-xl border-2 border-gray-200 bg-white"
-            >
-              <img 
-                src={fiesta.imagen} 
-                alt={fiesta.nombre} 
-                className="w-24 h-24 object-cover rounded-lg"
-              />
-              <div className="flex-1">
-                <div className="flex justify-between items-start">
-                  <h3 className="font-bold text-gray-800">{fiesta.nombre}</h3>
-                  <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                    {fiesta.fecha}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600 mt-1">{fiesta.descripcion}</p>
-                <p className="text-sm text-green-700 mt-2 font-medium">
-                  {fiesta.destacado}
-                </p>
-              </div>
-            </div>
-          ))}
+        <p className="text-gray-700 mb-4 text-center italic">{fiesta.descripcion}</p>
+
+        <p className="text-green-800 font-semibold mb-2 text-center">
+          {fiesta.destacado}
+        </p>
+
+        <p className="text-gray-600 mb-4 text-center">
+          <strong>Lugar:</strong> {fiesta.lugar}
+        </p>
+
+        <div className="mb-4">
+          <h3 className="font-semibold text-gray-800 mb-2">Actividades destacadas:</h3>
+          <ul className="list-disc list-inside text-gray-700 space-y-1">
+            {fiesta.actividades.map((actividad, idx) => (
+              <li key={idx}>{actividad}</li>
+            ))}
+          </ul>
         </div>
 
         <div className="flex justify-between gap-4">

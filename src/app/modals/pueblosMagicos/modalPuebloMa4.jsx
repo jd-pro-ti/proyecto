@@ -20,7 +20,7 @@ export default function ModalPuebloMa4({ show, onClose, onNext, onBack }) {
         }`}
       >
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">¿Te quieres hospedar?</h2>
+          <h2 className="text-2xl font-bold text-gray-800">¿Te gustaría hospedarte cerca del evento?</h2>
           <p className="text-gray-500 mt-2 text-sm">Recibe recomendaciones personalizadas</p>
         </div>
 

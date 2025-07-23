@@ -105,95 +105,104 @@ const goToCategory = (category, index = 1) => {
 // goToCategory('playa', 2);
 
 
-  const nextModal = (forceIndex = null) => {
-    closeModal();
-    setTimeout(() => {
-      const maxIndexByStep = {
-        playa: 7,
-        pueblosMagicos: 7,
-        pueblos: 8,
-      };
+const nextModal = (forceIndex = null) => {
+  closeModal();
+  setTimeout(() => {
+    const maxIndexByStep = {
+      playa: 7,
+      pueblosMagicos: 7,
+      pueblos: 8,
+    };
 
-      const maxIndex = maxIndexByStep[step] || 5;
+    const maxIndex = maxIndexByStep[step] || 5;
 
-      if (typeof forceIndex === 'number') {
-        // Guardar modal anterior SOLO si es salto especial
-        if (
-          (step === 'pueblos' && modalIndex === 5 && forceIndex === 8) ||
-          (step === 'pueblosMagicos' && modalIndex === 4 && forceIndex === 7)
-        ) {
-          setFromHospedajeSalto(true);
-          setPreviousModalBeforeSalto(modalIndex);
-        } else {
-          setFromHospedajeSalto(false);
-          setPreviousModalBeforeSalto(null);
-        }
-
-        setModalIndex(forceIndex);
-        openModal();
-      } else if (modalIndex < maxIndex) {
-        setModalIndex((prev) => prev + 1);
-        setFromHospedajeSalto(false);
-        setPreviousModalBeforeSalto(null);
-        openModal();
+    if (typeof forceIndex === 'number') {
+      if (
+        (step === 'pueblos' && modalIndex === 5 && forceIndex === 8) ||
+        (step === 'pueblosMagicos' && modalIndex === 4 && forceIndex === 7) ||
+        (step === 'pueblosMagicos' && modalIndex === 2 && forceIndex === 4)
+      ) {
+        setFromHospedajeSalto(true);
+        setPreviousModalBeforeSalto(modalIndex);
       } else {
-        setStep('inicio');
-        setModalIndex(1);
         setFromHospedajeSalto(false);
         setPreviousModalBeforeSalto(null);
-        setStartedFromSearch(false);
-        setSearchStartIndex(null);
-        closeModal(true);
-      }
-    }, 350);
-  };
-
-  const trasModal = () => {
-    closeModal();
-    setTimeout(() => {
-      // Salto especial (Hospedaje)
-      if (fromHospedajeSalto && previousModalBeforeSalto !== null) {
-        setModalIndex(previousModalBeforeSalto);
-        setFromHospedajeSalto(false);
-        setPreviousModalBeforeSalto(null);
-        openModal();
-        return;
       }
 
-      // Retroceder paso a paso hasta el índice donde comenzó la búsqueda
-      if (startedFromSearch && searchStartIndex !== null) {
-        if (modalIndex > searchStartIndex) {
-          setModalIndex((prev) => prev - 1);
-          openModal();
-          return;
-        } else {
-          // Ya en el índice inicial de búsqueda, regresar a inicio
-          setStep('inicio');
-          setModalIndex(1);
-          setStartedFromSearch(false);
-          setSearchStartIndex(null);
-          openModal();
-          return;
-        }
-      }
-
-      // Si estamos en el primer modal normal, regresar a inicio
-      if (modalIndex === 1) {
-        setStep('inicio');
-        setModalIndex(1);
-        setStartedFromSearch(false);
-        setFromHospedajeSalto(false);
-        setPreviousModalBeforeSalto(null);
-        setSearchStartIndex(null);
-        openModal();
-        return;
-      }
-
-      // Retroceso normal paso a paso
-      setModalIndex((prev) => prev - 1);
+      setModalIndex(forceIndex);
       openModal();
-    }, 350);
-  };
+    } else if (modalIndex < maxIndex) {
+      setModalIndex((prev) => prev + 1);
+      setFromHospedajeSalto(false);
+      setPreviousModalBeforeSalto(null);
+      openModal();
+    } else {
+      setStep('inicio');
+      setModalIndex(1);
+      setFromHospedajeSalto(false);
+      setPreviousModalBeforeSalto(null);
+      setStartedFromSearch(false);
+      setSearchStartIndex(null);
+      closeModal(true);
+    }
+  }, 350);
+};
+
+
+const trasModal = () => {
+  closeModal();
+  setTimeout(() => {
+    // Salto especial (Hospedaje)
+    if (fromHospedajeSalto && previousModalBeforeSalto !== null) {
+      setModalIndex(previousModalBeforeSalto);
+      setFromHospedajeSalto(false);
+      setPreviousModalBeforeSalto(null);
+      openModal();
+      return;
+    }
+
+    // Retroceder paso a paso hasta el índice donde comenzó la búsqueda
+    if (startedFromSearch && searchStartIndex !== null) {
+      if (modalIndex > searchStartIndex) {
+        setModalIndex((prev) => prev - 1);
+        openModal();
+        return;
+      } else {
+        // Ya en el índice inicial de búsqueda, regresar a inicio
+        setStep('inicio');
+        setModalIndex(1);
+        setStartedFromSearch(false);
+        setSearchStartIndex(null);
+        openModal();
+        return;
+      }
+    }
+
+    // Si estamos en el primer modal normal, regresar a inicio
+    if (modalIndex === 1) {
+      setStep('inicio');
+      setModalIndex(1);
+      setStartedFromSearch(false);
+      setFromHospedajeSalto(false);
+      setPreviousModalBeforeSalto(null);
+      setSearchStartIndex(null);
+      openModal();
+      return;
+    }
+
+    // Aquí agregamos el cambio para que si estás en pueblosMagicos modal 4, regrese al 2
+    if (step === 'pueblosMagicos' && modalIndex === 4) {
+      setModalIndex(2);
+      openModal();
+      return;
+    }
+
+    // Retroceso normal paso a paso
+    setModalIndex((prev) => prev - 1);
+    openModal();
+  }, 350);
+};
+
 
   return (
     <>
