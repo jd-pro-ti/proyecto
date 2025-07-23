@@ -100,10 +100,6 @@ const goToCategory = (category, index = 1) => {
   }, 350);
 };
 
-// Asegúrate de que al hacer la búsqueda con el input de 'playa', estés pasando index = 2:
-// Por ejemplo:
-// goToCategory('playa', 2);
-
 
   const nextModal = (forceIndex = null) => {
     closeModal();
@@ -119,8 +115,9 @@ const goToCategory = (category, index = 1) => {
       if (typeof forceIndex === 'number') {
         // Guardar modal anterior SOLO si es salto especial
         if (
-          (step === 'pueblos' && modalIndex === 5 && forceIndex === 8) ||
-          (step === 'pueblosMagicos' && modalIndex === 4 && forceIndex === 7)
+          (step === 'pueblos' && modalIndex === 4 && forceIndex === 8) ||
+          (step === 'pueblosMagicos' && modalIndex === 3 && forceIndex === 7) ||
+          (step === 'playa' && modalIndex === 3 && forceIndex === 7)
         ) {
           setFromHospedajeSalto(true);
           setPreviousModalBeforeSalto(modalIndex);
@@ -149,51 +146,55 @@ const goToCategory = (category, index = 1) => {
   };
 
   const trasModal = () => {
-    closeModal();
-    setTimeout(() => {
-      // Salto especial (Hospedaje)
-      if (fromHospedajeSalto && previousModalBeforeSalto !== null) {
-        setModalIndex(previousModalBeforeSalto);
-        setFromHospedajeSalto(false);
-        setPreviousModalBeforeSalto(null);
+  closeModal();
+  setTimeout(() => {
+    // Si venimos de un salto especial (hospedaje), volvemos al modal de origen
+    if (fromHospedajeSalto && previousModalBeforeSalto !== null) {
+      setModalIndex(previousModalBeforeSalto);
+      setFromHospedajeSalto(false);
+      setPreviousModalBeforeSalto(null);
+      openModal();
+      return;
+    }
+
+    // Si venimos de una búsqueda (iniciado en un modal > 1)
+    if (startedFromSearch && searchStartIndex !== null) {
+      if (modalIndex > searchStartIndex) {
+        setModalIndex((prev) => prev - 1);
         openModal();
         return;
-      }
-
-      // Retroceder paso a paso hasta el índice donde comenzó la búsqueda
-      if (startedFromSearch && searchStartIndex !== null) {
-        if (modalIndex > searchStartIndex) {
-          setModalIndex((prev) => prev - 1);
-          openModal();
-          return;
-        } else {
-          // Ya en el índice inicial de búsqueda, regresar a inicio
-          setStep('inicio');
-          setModalIndex(1);
-          setStartedFromSearch(false);
-          setSearchStartIndex(null);
-          openModal();
-          return;
-        }
-      }
-
-      // Si estamos en el primer modal normal, regresar a inicio
-      if (modalIndex === 1) {
+      } else {
         setStep('inicio');
         setModalIndex(1);
         setStartedFromSearch(false);
-        setFromHospedajeSalto(false);
-        setPreviousModalBeforeSalto(null);
         setSearchStartIndex(null);
         openModal();
         return;
       }
+    }
 
-      // Retroceso normal paso a paso
-      setModalIndex((prev) => prev - 1);
+    // Si estamos en el primer modal del flujo, volvemos al inicio
+    const isFirstModal = 
+      (step === 'playa' && modalIndex === 1) ||
+      (step === 'pueblosMagicos' && modalIndex === 1) ||
+      (step === 'pueblos' && modalIndex === 1);
+
+    if (isFirstModal) {
+      setStep('inicio');
+      setModalIndex(1);
+      setFromHospedajeSalto(false);
+      setPreviousModalBeforeSalto(null);
+      setStartedFromSearch(false);
+      setSearchStartIndex(null);
       openModal();
-    }, 350);
-  };
+      return;
+    }
+
+    // Retroceso normal
+    setModalIndex((prev) => prev - 1);
+    openModal();
+  }, 350);
+};
 
   return (
     <>

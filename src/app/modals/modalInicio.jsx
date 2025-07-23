@@ -97,7 +97,7 @@ export default function ModalInicio({ show, onClose, onSelect }) {
             onClick={() => handleSelect('pueblosMagicos')}
             className="flex-1 flex flex-col items-center gap-1 bg-white hover:bg-amber-50 border border-amber-100 rounded-xl p-3 transition-all hover:shadow-md cursor-pointer"
           >
-            <img src="/imagenes/pueblo.svg" alt="Pueblos magicos" className="w-20 h-20" />
+            <img src="/imagenes/puebloMa.svg" alt="Pueblos magicos" className="w-20 h-20" />
             <span className="text-sm font-medium text-gray-700">Pueblos Magicos</span>
           </button>
 

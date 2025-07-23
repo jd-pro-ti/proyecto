@@ -34,7 +34,6 @@ return (
     <div className={`bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300 ${show ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
         <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Según tus preferencias estos son los lugares que te podrían interesar</h2>
-        <p className="text-gray-500 mt-2 text-sm">Conoce las fiestas disponibles</p>
         </div>
 
         {/* Contenedor de fiestas (ahora divs en lugar de botones) */}

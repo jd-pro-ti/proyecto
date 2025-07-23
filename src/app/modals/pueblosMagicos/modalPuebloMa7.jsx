@@ -33,8 +33,7 @@ export default function ModalPueblosMagicos({ show, onClose, onNext, onBack }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300">
       <div className={`bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300 ${show ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">Según la fecha sugerida, estas son las fiestas patronales de Tlalpujahua</h2>
-          <p className="text-gray-500 mt-2 text-sm">Conoce las fiestas disponibles</p>
+          <h2 className="text-2xl font-bold text-gray-800">Conoce las fiestas disponibles en julio </h2>
         </div>
 
         {/* Contenedor de fiestas (ahora divs en lugar de botones) */}
