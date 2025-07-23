@@ -11,6 +11,7 @@ import ModalPlaya4 from './playas/modalPlaya4';
 import ModalPlaya5 from './playas/modalPlaya5';
 import ModalPlaya6 from './playas/modalPlaya6';
 import ModalPlaya7 from './playas/modalplaya7';
+import ModalPlaya8 from './playas/modalPlaya8';
 
 // Pueblos Mágicos
 import ModalPuebloMa1 from './pueblosMagicos/modalPuebloMa1';
@@ -31,6 +32,7 @@ import ModalPueblo5 from './pueblos/modalPueblo5';
 import ModalPueblo6 from './pueblos/modalPueblo6';
 import ModalPueblo7 from './pueblos/modalPueblo7';
 import ModalPueblo8 from './pueblos/modalPueblo8';
+import ModalPueblo9 from './pueblos/modalPueblo9';
 
 export default function ModalSelector({ onFinish }) {
   const [step, setStep] = useState('inicio');
@@ -106,9 +108,9 @@ const goToCategory = (category, index = 1) => {
     closeModal();
     setTimeout(() => {
       const maxIndexByStep = {
-        playa: 7,
+        playa: 8,
         pueblosMagicos: 8,
-        pueblos: 8,
+        pueblos: 9,
       };
 
       const maxIndex = maxIndexByStep[step] || 5;
@@ -226,6 +228,9 @@ const goToCategory = (category, index = 1) => {
       {isOpen && step === 'playa' && modalIndex === 7 && (
       <ModalPlaya7 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
       )}
+      {isOpen && step === 'playa' && modalIndex === 8 && (
+      <ModalPlaya8 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
 
       {/* Pueblos Magicos */}
       {isOpen && step === 'pueblosMagicos' && modalIndex === 1 && (
@@ -284,6 +289,9 @@ const goToCategory = (category, index = 1) => {
       )}
       {isOpen && step === 'pueblos' && modalIndex === 8 && (
         <ModalPueblo8 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
+      )}
+      {isOpen && step === 'pueblos' && modalIndex === 9 && (
+        <ModalPueblo9 show={show} onClose={closeModal} onNext={nextModal} onBack={trasModal} onSelect={goToCategory} />
       )}
     </>
   );
