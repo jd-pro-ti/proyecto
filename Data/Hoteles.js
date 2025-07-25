@@ -2,7 +2,7 @@ export const Hoteles = [
     {
     nombre: 'Hotel Santa Fe',
     direccion: 'Calle Principal #123, Paracho',
-    descripcion: 'Hotel céntrico con desayuno incluido y Wi-Fi.',
+    descripcion: 'Hotel céntrico con desayuno incluido y Wi‑Fi.',
     imagen: '/imagenes/hoteles/paracho1.jpg',
     precioDesde: 800,
     puebloMagico: 'paracho',
@@ -20,7 +20,7 @@ export const Hoteles = [
     puebloMagico: 'cuitzeo',
     habitaciones: [
         { tipo: 'Estándar', precio: 700, detalles: '1 cama matrimonial, baño privado' }
-    ]
+        ]
     },
     {
     nombre: 'Hotel La Casona',
@@ -30,7 +30,7 @@ export const Hoteles = [
     precioDesde: 900,
     puebloMagico: 'patzcuaro',
     habitaciones: [
-        { tipo: 'Estándar', precio: 900, detalles: 'Cama doble, Wi-Fi gratuito' }
+        { tipo: 'Estándar', precio: 900, detalles: 'Cama doble, Wi‑Fi gratuito' }
     ]
     },
     {
@@ -50,7 +50,7 @@ export const Hoteles = [
     descripcion: 'Ambiente tradicional, cerca de talleres de cobre.',
     imagen: '/imagenes/hoteles/santa-clara1.jpg',
     precioDesde: 750,
-    puebloMagico: 'santa-clara-del-cobre',
+    puebloMagico: 'santa‑clara‑del‑cobre',
     habitaciones: [
         { tipo: 'Estándar', precio: 750, detalles: 'Cama doble, baño privado' }
     ]
@@ -63,7 +63,7 @@ export const Hoteles = [
     precioDesde: 880,
     puebloMagico: 'tacambaro',
     habitaciones: [
-        { tipo: 'Estándar', precio: 880, detalles: '1 cama matrimonial, Wi-Fi, aire acondicionado' }
+        { tipo: 'Estándar', precio: 880, detalles: '1 cama matrimonial, Wi‑Fi, aire acondicionado' }
     ]
     },
     {
@@ -97,6 +97,107 @@ export const Hoteles = [
     puebloMagico: 'angangueo',
     habitaciones: [
         { tipo: 'Estándar', precio: 820, detalles: 'Cama matrimonial, desayuno incluido' }
+    ]
+    },
+
+    // --- PLAYAS
+    {
+    nombre: 'Hotel Playa Azul',
+    direccion: 'Av. Venustiano Carranza S/N, Playa Azul, Michoacán',
+    descripcion: 'Hotel frente a la playa con restaurante, alberca y Wi‑Fi gratis',
+    imagen: '/imagenes/hoteles/playa-azul.jpg',
+    precioDesde: 950,
+    playa: 'playa‑azul',
+    habitaciones: [
+        { tipo: 'Estándar', precio: 950, detalles: '1 cama queen, aire acondicionado' }
+    ]
+    },
+    {
+    nombre: 'Parador Turístico Ayult',
+    direccion: 'Tepalcatepec s/n, Maruata, Aquila, Michoacán',
+    descripcion: 'Cabañas ecológicas frente a la playa con restaurante local ($400 MXN)',
+    imagen: '/imagenes/hoteles/maruata.jpg',
+    precioDesde: 400,
+    playa: 'maruata',
+    habitaciones: [
+        { tipo: 'Cabaña King', precio: 400, detalles: 'Servicio de restaurante incluido' }
+    ]
+    },
+    {
+    nombre: 'Hotel y Villas Partour Caleta',
+    direccion: 'Carretera #200 Km 51, Caleta de Campos, Mich.',
+    descripcion: 'Hotel 4 estrellas con alberca, restaurante y tours a Maruata',
+    imagen: '/imagenes/hoteles/caleta.jpg',
+    precioDesde: 800,
+    playa: 'caleta‑de‑campos',
+    habitaciones: [
+        { tipo: 'Estándar', precio: 800, detalles: 'TV, restaurante, piscina' }
+      ]
+    },
+    {
+    nombre: 'Casa Baomal Nexpa',
+    direccion: 'Playa Nexpa, Michoacán',
+    descripcion: 'Cabañas y hospedaje rústico ideal para surfistas y ecoturismo',
+    imagen: '/imagenes/hoteles/nexpa.jpg',
+    precioDesde: 850,
+    playa: 'nexpa',
+    habitaciones: [
+        { tipo: 'Surf bungalow', precio: 850, detalles: 'Hamaca, balcón, cocina básica' }
+      ]
+    },
+    {
+    nombre: 'Cabañas Faro del Mar',
+    direccion: 'Faro de Bucerías, Lázaro Cárdenas, Michoacán',
+    descripcion: 'Cabañas ecológicas frente al mar en zona tranquila',
+    imagen: '/imagenes/hoteles/faro-de-bucerias.jpg',
+    precioDesde: 750,
+    playa: 'faro‑de‑bucerias',
+    habitaciones: [
+        { tipo: 'Cabaña individual', precio: 750, detalles: 'Naturaleza, acceso directo a playa' }
+    ]
+    },
+    {
+    nombre: 'La Ticla Surf Hostel',
+    direccion: 'La Ticla, Aquila, Michoacán',
+    descripcion: 'Hostal básico para surfistas y mochileros junto a la playa',
+    imagen: '/imagenes/hoteles/la-ticla.jpg',
+    precioDesde: 500,
+    playa: 'la‑ticla',
+    habitaciones: [
+        { tipo: 'Dormitorio compartido', precio: 500, detalles: 'Ideal para surfistas y grupos' }
+    ]
+    },
+    {
+    nombre: 'Cabañas Punta Guitapilla',
+    direccion: 'Punta Guitapilla, Aquila, Michoacán',
+    descripcion: 'Cabañas artesanales frente al mar en zona silvestre',
+    imagen: '/imagenes/hoteles/guitapilla.jpg',
+    precioDesde: 800,
+    playa: 'guitapilla',
+    habitaciones: [
+        { tipo: 'Cabaña básica', precio: 800, detalles: '1 cama matrimonial, terraza y cocina' }
+    ]
+    },
+    {
+    nombre: 'Hotel Tortugas Colola',
+    direccion: 'Reserva de la Tortuga, Colola, Aquila, Mich.',
+    descripcion: 'Alojamiento básico cerca del campamento tortuguero',
+    imagen: '/imagenes/hoteles/colola.jpg',
+    precioDesde: 650,
+    playa: 'colola',
+    habitaciones: [
+        { tipo: 'Rústica', precio: 650, detalles: 'Ambiente natural, camas dobles' }
+    ]
+    },
+    {
+    nombre: 'Hotel San Juan de Alima',
+    direccion: 'San Juan de Alima, Aquila, Michoacán',
+    descripcion: 'Pequeño hotel local con instalaciones sencillas y vistas costeras',
+    imagen: '/imagenes/hoteles/san-juan-alima.jpg',
+    precioDesde: 900,
+    playa: 'san‑juan‑de‑alima',
+    habitaciones: [
+        { tipo: 'Estándar', precio: 900, detalles: 'Baño privado, ventilador, lugar tranquilo' }
     ]
     }
 ];
