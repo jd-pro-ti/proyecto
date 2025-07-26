@@ -39,7 +39,7 @@ export default function ModalInicio({ show, onClose, onSelect }) {
   } else if( tipo === 'playa') {
     onSelect('playa', 2); // ← Ir directo al modal 2 para
   } else if (tipo === 'pueblosMagicos') {
-    onSelect(tipo, 2); // ← Modal 2 para playas y pueblos mágicos
+    onSelect(tipo, 2); // ← Modal 2 para playas y pueblos mágicosd
   }
   
 
