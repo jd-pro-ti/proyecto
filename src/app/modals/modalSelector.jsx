@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import ModalInicio from './modalInicio';
+import ModalInicio from '../components/modalInicio';
 
 // Playa
 import ModalPlaya1 from './playas/modalPlaya1';
