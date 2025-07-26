@@ -24,7 +24,7 @@ import ModalPuebloMa7 from './pueblosMagicos/modalPuebloMa7';
 import ModalPuebloMa8 from './pueblosMagicos/modalPuebloMa8';
 
 // Pueblos
-import ModalPueblo1 from './pueblos/modalPueblo1';
+import ModalPueblo1 from '../components/modalPueblo';
 import ModalPueblo2 from './pueblos/modalPueblo2';
 import ModalPueblo3 from './pueblos/modalPueblo3';
 import ModalPueblo4 from './pueblos/modalPueblo4';
