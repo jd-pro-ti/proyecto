@@ -1,30 +1,48 @@
 'use client';
+
 import { useState } from 'react';
 import ModalInicio from './components/modalInicio';
 import ModalFlujo from './components/modalFlujo';
-import ModalPueblo from './components/modalPueblo';
+import ModalPueblo from './components/modalPueblo'; // Asegúrate de importar ModalPueblo
 
 export default function Home() {
   const [showInicio, setShowInicio] = useState(false);
   const [showFlujo, setShowFlujo] = useState(false);
-  const [showPueblo, setShowPueblo] = useState(false);
+  const [showPueblo, setShowPueblo] = useState(false); // Nuevo estado para ModalPueblo
   const [categoria, setCategoria] = useState(null);
-  const [categoriaPuebloSeleccionada, setCategoriaPuebloSeleccionada] = useState(null); // Nuevo estado
   const [seleccionFinal, setSeleccionFinal] = useState(null);
 
-  const handleSelect = (categoriaSeleccionada, subcategoria = null) => {
+  const handleSelect = (categoriaSeleccionada) => {
     setCategoria(categoriaSeleccionada);
-    setCategoriaPuebloSeleccionada(subcategoria); // Guardar la subcategoría
-    
-    if (categoriaSeleccionada === 'pueblos') {
-      setShowPueblo(true);
-    } else {
-      setShowFlujo(true);
-    }
     setShowInicio(false);
+    
+    // Mostrar ModalFlujo o ModalPueblo según la categoría seleccionada
+    if (categoriaSeleccionada === 'pueblos') {
+      setShowPueblo(true); // Mostrar ModalPueblo para "Pueblos"
+    } else {
+      setShowFlujo(true); // Mostrar ModalFlujo para otras categorías
+    }
   };
 
-  // Resto de tus funciones...
+  const handleCerrarFlujo = () => {
+    setShowFlujo(false);
+    setShowPueblo(false); // También cerrar ModalPueblo si está abierto
+    setCategoria(null);
+    setSeleccionFinal(null);
+  };
+
+  const handleVolver = () => {
+    setShowFlujo(false);
+    setShowPueblo(false);
+    setShowInicio(true);
+  };
+
+  const handleNext = (seleccionadoId) => {
+    setSeleccionFinal(seleccionadoId);
+    console.log("Usuario seleccionó:", seleccionadoId);
+    setShowFlujo(false);
+    setShowPueblo(false);
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-black">
@@ -47,12 +65,8 @@ export default function Home() {
         <ModalFlujo
           show={showFlujo}
           categoria={categoria}
-          categoriaSeleccionada={categoriaPuebloSeleccionada} // Pasar la prop
           onClose={handleCerrarFlujo}
-          onBack={() => {
-            setShowFlujo(false);
-            setShowInicio(true);
-          }}
+          onBack={handleVolver}
           onNext={handleNext}
         />
       )}
@@ -60,12 +74,9 @@ export default function Home() {
       {showPueblo && (
         <ModalPueblo
           show={showPueblo}
-          onClose={() => setShowPueblo(false)}
-          onSelect={handleSelect}
-          onBack={() => {
-            setShowPueblo(false);
-            setShowInicio(true);
-          }}
+          onClose={handleCerrarFlujo}
+          onBack={handleVolver}
+          onNext={handleNext}
         />
       )}
     </main>

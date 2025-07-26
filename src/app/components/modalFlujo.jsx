@@ -9,7 +9,7 @@ import { eventos } from '../data/eventos';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-export default function ModalFlujo({ show, onClose, categoria, categoriaSeleccionada, onBack, onNext }) {
+export default function ModalFlujo({ show, onClose, categoria, onBack }) {
   // Estados separados para cada selección
   const [destinoSeleccionado, setDestinoSeleccionado] = useState(null);
   const [tipoViaje, setTipoViaje] = useState(null);
@@ -18,7 +18,6 @@ export default function ModalFlujo({ show, onClose, categoria, categoriaSeleccio
   const [fechasViaje, setFechasViaje] = useState({ inicio: null, fin: null });
   const [hotelSeleccionado, setHotelSeleccionado] = useState(null);
   const [habitacionSeleccionada, setHabitacionSeleccionada] = useState(null);
-  const [categoriaPueblo, setCategoriaPueblo] = useState(null);
 
   // Estados para el flujo
   const [paso, setPaso] = useState(1);
@@ -34,11 +33,6 @@ export default function ModalFlujo({ show, onClose, categoria, categoriaSeleccio
   ? alojamientos.filter(hotel => 
       hotel.municipio.toLowerCase() === destinoSeleccionado.toLowerCase())
   : [];
-
-   const pueblosFiltrados = pueblos.filter(
-  (pueblo) => pueblo.categoria === categoriaSeleccionada
-);
-
 
   const eventosFiltrados = destinoSeleccionado 
   ? eventos.filter(evento => 
@@ -321,34 +315,20 @@ export default function ModalFlujo({ show, onClose, categoria, categoriaSeleccio
           : 'bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg'
       }`}
     >
-      {paso === 6 ? 'Siguinte' : 
-       paso === 7 ? 'Siguinte' : 
+      {paso === 6 ? 'Seleccionar habitación' : 
+       paso === 7 ? 'Finalizar reserva' : 
        'Siguiente'}
     </button>
   </div>
 );
   
 
-  const renderPaso1 = () => {
-  // Filtrar pueblos si la categoría es 'pueblos' y hay una subcategoría seleccionada
-  const datosFiltrados = categoria === 'pueblos' && categoriaPueblo
-  ? Object.entries(pueblos).filter(([_, data]) => data.categoria === categoriaPueblo)
-  : datosLista;
-
-  return (
+  const renderPaso1 = () => (
     <>
-      <h2 className="text-2xl font-bold text-gray-800">
-        {categoria === 'pueblos' && categoriaPueblo 
-          ? `Pueblos ${categoriaPueblo}` 
-          : '¿A dónde desea ir?'}
-      </h2>
-      <p className="text-gray-500 mt-2 text-sm">
-        {categoria === 'pueblos' && categoriaPueblo
-          ? `Selecciona un pueblo con ${categoriaPueblo}`
-          : `Selecciona un destino de ${tituloMap[categoria] || 'opciones'}`}
-      </p>
+      <h2 className="text-2xl font-bold text-gray-800">¿A dónde desea ir?</h2>
+      <p className="text-gray-500 mt-2 text-sm">Selecciona un destino de {tituloMap[categoria] || 'opciones'}</p>
       <div className="grid grid-cols-3 gap-3 max-h-[300px] overflow-y-auto mb-6 p-2">
-        {datosFiltrados.map(([id, data]) => (
+        {datosLista.map(([id, data]) => (
           <button
             key={id}
             onClick={() => toggleSeleccion('destino', id)}
@@ -366,7 +346,6 @@ export default function ModalFlujo({ show, onClose, categoria, categoriaSeleccio
       {renderBotones()}
     </>
   );
-};
 
   const renderPaso2 = () => (
     <>
