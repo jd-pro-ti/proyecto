@@ -1,327 +1,94 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { pueblosMagicos } from '../data/pueblosMagicos';
-import pueblos from '../data/pueblos';
-import playas from '../data/playas';
-import { alojamientos } from '../data/alojamientos';
-import { eventos } from '../data/eventos';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import  {useFlujo}  from './flujo';
 
 export default function ModalFlujo({ show, onClose, categoria, onBack }) {
-  // Estados separados para cada selección
-  const [destinoSeleccionado, setDestinoSeleccionado] = useState(null);
-  const [tipoViaje, setTipoViaje] = useState(null);
-  const [detallesPersonas, setDetallesPersonas] = useState({ adultos: 1, ninos: 0, bebes: 0 });
-  const [necesitaHospedaje, setNecesitaHospedaje] = useState(null);
-  const [fechasViaje, setFechasViaje] = useState({ inicio: null, fin: null });
-  const [hotelSeleccionado, setHotelSeleccionado] = useState(null);
-  const [habitacionSeleccionada, setHabitacionSeleccionada] = useState(null);
-
-  // Estados para el flujo
-  const [paso, setPaso] = useState(1);
-  const [seleccion, setSeleccion] = useState({ destino: null, compania: null });
-  const [showDetalles, setShowDetalles] = useState(false);
-  const [respuesta, setRespuesta] = useState(null);
-  const [fechasVisita, setFechasVisita] = useState({ fechaInicio: null, fechaFin: null });
-  const [mesActualInicio, setMesActualInicio] = useState(new Date());
-  const [mesActualFin, setMesActualFin] = useState(new Date());
-
-  // Filtrar hoteles por destino seleccionado
- const hotelesFiltrados = destinoSeleccionado 
-  ? alojamientos.filter(hotel => 
-      hotel.municipio.toLowerCase() === destinoSeleccionado.toLowerCase())
-  : [];
-
-  const eventosFiltrados = destinoSeleccionado 
-  ? eventos.filter(evento => 
-      evento.lugar.toLowerCase().includes(destinoSeleccionado.toLowerCase())
-    ) 
-  : [];
-  // Reiniciar estados cuando se cierra el modal
-  useEffect(() => {
-    if (!show) {
-      setDestinoSeleccionado(null);
-      setTipoViaje(null);
-      setDetallesPersonas({ adultos: 1, ninos: 0, bebes: 0 });
-      setNecesitaHospedaje(null);
-      setFechasViaje({ inicio: null, fin: null });
-      setHotelSeleccionado(null);
-      
-      setPaso(1);
-      setSeleccion({ destino: null, compania: null });
-      setRespuesta(null);
-      setFechasVisita({ fechaInicio: null, fechaFin: null });
-    }
-  }, [show]);
-
-  // Actualizar estados de selección cuando cambian
-  useEffect(() => {
-    if (seleccion.destino) {
-      const data = dataMap[categoria] || {};
-      setDestinoSeleccionado(data[seleccion.destino]?.nombre || null);
-    }
-  }, [seleccion.destino, categoria]);
-
-  useEffect(() => {
-    if (seleccion.compania) {
-      setTipoViaje(seleccion.compania);
-    }
-  }, [seleccion.compania]);
-
-  useEffect(() => {
-    setNecesitaHospedaje(respuesta);
-  }, [respuesta]);
-
-  useEffect(() => {
-    setFechasViaje({
-      inicio: fechasVisita.fechaInicio,
-      fin: fechasVisita.fechaFin
-    });
-  }, [fechasVisita]);
-
-  // Mostrar en consola cuando se completa el flujo
-  const mostrarResumenFinal = () => {
-    const resumen = {
-      Destino: destinoSeleccionado,
-      TipoViaje: tipoViaje,
-      DetallesPersonas: detallesPersonas,
-      Hospedaje: necesitaHospedaje ? 'Sí' : 'No',
-      HotelSeleccionado: hotelSeleccionado || 'No seleccionado',
-      Fechas: {
-        Inicio: fechasViaje.inicio ? format(fechasViaje.inicio, 'dd/MM/yyyy') : 'No seleccionada',
-        Fin: fechasViaje.fin ? format(fechasViaje.fin, 'dd/MM/yyyy') : 'No seleccionada'
-      }
-    };
+  const {
+    // Estados
+    paso,
+    seleccion,
+    destinoSeleccionado,
+    tipoViaje,
+    detallesPersonas,
+    necesitaHospedaje,
+    fechasViaje,
+    hotelSeleccionado,
+    habitacionSeleccionada,
+    eventoSeleccionado,
+    showDetalles,
+    respuesta,
+    fechasVisita,
+    mesActualInicio,
+    mesActualFin,
+    hotelesFiltrados,
+    eventosFiltrados,
     
-    console.log('Resumen completo del viaje:', resumen);
-  };
-
-  const dataMap = {
-    pueblosMagicos,
-    pueblos,
-    playa: playas,
-  };
-
-  const tituloMap = {
-    pueblosMagicos: 'Pueblos Mágicos',
-    pueblos: 'Pueblos',
-    playa: 'Playas',
-  };
-
-  const opcionesCompania = [
-    { id: 'solo', label: 'Solo', icon: '/imagenes/playa/playa16.svg' },
-    { id: 'pareja', label: 'Pareja', icon: '/imagenes/playa/playa17.svg' },
-    { id: 'familia', label: 'Familia', icon: '/imagenes/playa/playa18.svg' },
-    { id: 'amigos', label: 'Amigos', icon: '/imagenes/playa/playa19.svg' },
-  ];
-   const habitaciones = [
-    { 
-      id: 'sencilla', 
-      nombre: 'Habitación Sencilla', 
-      icono: '/imagenes/puebloMagico/puebloM11.svg',
-      precio: '$800/noche',
-      disponibles: 5,
-      descripcion: '1 cama individual, baño privado'
-    },
-    { 
-      id: 'doble', 
-      nombre: 'Habitación Doble', 
-      icono: '/imagenes/puebloMagico/puebloM12.svg',
-      precio: '$1,200/noche',
-      disponibles: 3,
-      descripcion: '2 camas individuales o 1 cama matrimonial'
-    },
-    { 
-      id: 'suite', 
-      nombre: 'Suite', 
-      icono: '/imagenes/puebloMagico/puebloM13.svg',
-      precio: '$2,000/noche',
-      disponibles: 2,
-      descripcion: 'Amplio espacio con sala de estar'
-    },
-    { 
-      id: 'familiar', 
-      nombre: 'Familiar', 
-      icono: '/imagenes/puebloMagico/puebloM14.svg',
-      precio: '$1,500/noche',
-      disponibles: 4,
-      descripcion: '2 habitaciones conectadas, hasta 4 personas'
-    },
-    { 
-      id: 'ejecutiva', 
-      nombre: 'Ejecutiva', 
-      icono: '/imagenes/puebloMagico/puebloM15.svg',
-      precio: '$1,800/noche',
-      disponibles: 3,
-      descripcion: 'Escritorio amplio y amenities de trabajo'
-    },
-    { 
-      id: 'presidencial', 
-      nombre: 'Presidencial', 
-      icono: '/imagenes/puebloMagico/puebloM16.svg',
-      precio: '$3,500/noche',
-      disponibles: 1,
-      descripcion: 'Lujo máximo con terraza privada'
-    },
-  ];
-  const datos = dataMap[categoria] || {};
-  const datosLista = Object.entries(datos);
-
-  const toggleOpcion = (opcion) => {
-    setSeleccion(prev => ({ ...prev, compania: opcion }));
-    if (opcion === 'familia' || opcion === 'amigos') {
-      setShowDetalles(true);
-    } else {
-      setShowDetalles(false);
-      setDetallesPersonas({ adultos: 1, ninos: 0, bebes: 0 });
-    }
-  };
-
-  const actualizarDetalles = (campo, valor) => {
-    setDetallesPersonas(prev => ({
-      ...prev,
-      [campo]: Math.max(0, valor)
-    }));
-  };
-
-  const toggleSeleccion = (tipo, id) => {
-    setSeleccion(prev => ({
-      ...prev,
-      [tipo]: prev[tipo] === id ? null : id,
-    }));
-  };
-
-  const toggleHotel = (hotelNombre) => {
-    setHotelSeleccionado(prev => prev === hotelNombre ? null : hotelNombre);
-  };
-
-  
-  const handleSiguiente = () => {
-  // Si estamos en paso 3 y la respuesta es "No", saltar al paso 7
-  if (paso === 3 && respuesta === false) {
-    setPaso(7);
-  } 
-  // Si estamos en paso 5 y no hay hoteles, saltar al paso 7
-  else if (paso === 5 && hotelesFiltrados.length === 0) {
-    setPaso(7);
-  }
-  // Si estamos en paso 7 y no necesitamos hospedaje, es el último paso
-  else if (paso === 7 && !necesitaHospedaje) {
-    mostrarResumenFinal();
-    onClose();
-  }
-  // Flujo normal
-  else if (paso < (necesitaHospedaje ? 8 : 4)) {
-    setPaso(p => p + 1);
-  } else {
-    mostrarResumenFinal();
-    onClose();
-  }
-};
-
- const handleVolver = () => {
-  if (paso > 1) {
-    // Si estamos en paso 7 y venimos de "No hospedaje", volver al paso 3
-    if (paso === 7 && respuesta === false) {
-      setPaso(3);
-    }
-    // Si estamos en paso 7 y venimos de "No hay hoteles", volver al paso 5
-    else if (paso === 7 && hotelesFiltrados.length === 0) {
-      setPaso(5);
-    }
-    // Si estamos en paso 5 y no hay hoteles, volver al paso 4
-    else if (paso === 5 && hotelesFiltrados.length === 0) {
-      setPaso(4);
-    }
-    // Flujo normal
-    else {
-      setPaso(p => p - 1);
-    }
-  } else {
-    onBack();
-  }
-};
-
-  const generarDiasMes = (fecha) => {
-    const year = fecha.getFullYear();
-    const month = fecha.getMonth();
-    const primerDia = new Date(year, month, 1);
-    const ultimoDia = new Date(year, month + 1, 0);
-    const dias = [];
-
-    // Días del mes anterior
-    const diaSemanaInicio = primerDia.getDay();
-    for (let i = 0; i < diaSemanaInicio; i++) {
-      dias.push(null);
-    }
-
-    // Días del mes actual
-    for (let i = 1; i <= ultimoDia.getDate(); i++) {
-      dias.push(new Date(year, month, i));
-    }
-
-    return dias;
-  };
-
-  const seleccionarFecha = (fecha, tipo) => {
-    if (tipo === 'inicio') {
-      setFechasVisita(prev => ({ ...prev, fechaInicio: fecha }));
-      if (fechasVisita.fechaFin && fecha > fechasVisita.fechaFin) {
-        setFechasVisita(prev => ({ ...prev, fechaFin: null }));
-      }
-    } else {
-      if (fechasVisita.fechaInicio && fecha >= fechasVisita.fechaInicio) {
-        setFechasVisita(prev => ({ ...prev, fechaFin: fecha }));
-      }
-    }
-  };
+    // Datos
+    tituloMap,
+    opcionesCompania,
+    habitaciones,
+    datos,
+    datosLista,
+    
+    // Funciones
+    toggleOpcion,
+    toggleSeleccion,
+    actualizarDetalles,
+    handleSiguiente,
+    handleVolver,
+    cambiarMes,
+    generarDiasMes,
+    seleccionarFecha,
+    setShowDetalles,
+    setRespuesta,
+    setHotelSeleccionado,
+    setHabitacionSeleccionada,
+    setEventoSeleccionado
+  } = useFlujo({ show, categoria, onClose, onBack });
 
   const renderBotones = () => (
-  <div className="flex justify-between gap-4 mt-4">
-    <button
-      onClick={onClose}
-      className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border border-gray-300 hover:bg-gray-100 transition"
-    >
-      Cerrar
-    </button>
-    <button
-      onClick={handleVolver}
-      className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border border-gray-300 hover:bg-gray-100 transition"
-    >
-      Volver
-    </button>
-    <button
-      onClick={handleSiguiente}
-      disabled={
-        (paso === 1 && !seleccion.destino) || 
-        (paso === 2 && !seleccion.compania) ||
-        (paso === 3 && respuesta === null) ||
-        (paso === 4 && (!fechasVisita.fechaInicio || !fechasVisita.fechaFin)) ||
-        (paso === 5 && hotelesFiltrados.length > 0 && !hotelSeleccionado) ||
-        (paso === 6 && !habitacionSeleccionada) ||
-        (paso === 7 && eventosFiltrados.length > 0 && !eventoSeleccionado)
-      }
-      className={`flex-1 px-4 py-2 rounded-lg font-medium transition ${
-        (paso === 1 && !seleccion.destino) || 
-        (paso === 2 && !seleccion.compania) ||
-        (paso === 3 && respuesta === null) ||
-        (paso === 4 && (!fechasVisita.fechaInicio || !fechasVisita.fechaFin)) ||
-        (paso === 5 && hotelesFiltrados.length > 0 && !hotelSeleccionado) ||
-        (paso === 6 && !habitacionSeleccionada) ||
-        (paso === 7 && eventosFiltrados.length > 0 && !eventoSeleccionado)
-          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          : 'bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg'
-      }`}
-    >
-      {paso === 6 ? 'Seleccionar habitación' : 
-       paso === 7 ? 'Finalizar reserva' : 
-       'Siguiente'}
-    </button>
-  </div>
-);
-  
+    <div className="flex justify-between gap-4 mt-4">
+      <button
+        onClick={onClose}
+        className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border border-gray-300 hover:bg-gray-100 transition"
+      >
+        Cerrar
+      </button>
+      <button
+        onClick={handleVolver}
+        className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg border border-gray-300 hover:bg-gray-100 transition"
+      >
+        Volver
+      </button>
+      <button
+        onClick={handleSiguiente}
+        disabled={
+          (paso === 1 && !seleccion.destino) || 
+          (paso === 2 && !seleccion.compania) ||
+          (paso === 3 && respuesta === null) ||
+          (paso === 4 && (!fechasVisita.fechaInicio || !fechasVisita.fechaFin)) ||
+          (paso === 5 && hotelesFiltrados.length > 0 && !hotelSeleccionado) ||
+          (paso === 6 && !habitacionSeleccionada) ||
+          (paso === 7 && eventosFiltrados.length > 0 && !eventoSeleccionado)
+        }
+        className={`flex-1 px-4 py-2 rounded-lg font-medium transition ${
+          (paso === 1 && !seleccion.destino) || 
+          (paso === 2 && !seleccion.compania) ||
+          (paso === 3 && respuesta === null) ||
+          (paso === 4 && (!fechasVisita.fechaInicio || !fechasVisita.fechaFin)) ||
+          (paso === 5 && hotelesFiltrados.length > 0 && !hotelSeleccionado) ||
+          (paso === 6 && !habitacionSeleccionada) ||
+          (paso === 7 && eventosFiltrados.length > 0 && !eventoSeleccionado)
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : 'bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg'
+        }`}
+      >
+        {paso === 6 ? 'Seleccionar habitación' : 
+         paso === 7 ? 'Finalizar reserva' : 
+         'Siguiente'}
+      </button>
+    </div>
+  );
 
   const renderPaso1 = () => (
     <>
@@ -449,7 +216,7 @@ export default function ModalFlujo({ show, onClose, categoria, onBack }) {
                   &lt;
                 </button>
                 <span className="text-sm font-medium text-black">
-                  {format(mesActualInicio, 'MMM yyyy', { locale: es })}
+                  {new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(mesActualInicio)}
                 </span>
                 <button 
                   onClick={() => cambiarMes('inicio', 'next')}
@@ -497,7 +264,7 @@ export default function ModalFlujo({ show, onClose, categoria, onBack }) {
                   &lt;
                 </button>
                 <span className="text-sm font-medium text-black">
-                  {format(mesActualFin, 'MMM yyyy', { locale: es })}
+                  {new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(mesActualFin)}
                 </span>
                 <button 
                   onClick={() => cambiarMes('fin', 'next')}
@@ -540,8 +307,8 @@ export default function ModalFlujo({ show, onClose, categoria, onBack }) {
         {(fechasVisita.fechaInicio || fechasVisita.fechaFin) && (
           <div className="mb-4 text-center">
             <p className="text-sm text-gray-600">
-              {fechasVisita.fechaInicio && `Inicio: ${format(fechasVisita.fechaInicio, 'dd/MM/yyyy')}`}
-              {fechasVisita.fechaFin && ` - Fin: ${format(fechasVisita.fechaFin, 'dd/MM/yyyy')}`}
+              {fechasVisita.fechaInicio && `Inicio: ${new Intl.DateTimeFormat('es-ES').format(fechasVisita.fechaInicio)}`}
+              {fechasVisita.fechaFin && ` - Fin: ${new Intl.DateTimeFormat('es-ES').format(fechasVisita.fechaFin)}`}
             </p>
           </div>
         )}
@@ -589,7 +356,6 @@ export default function ModalFlujo({ show, onClose, categoria, onBack }) {
       ) : (
         <div className="my-8 text-center">
           <p className="text-gray-500">No hay hoteles disponibles para este destino.</p>
-          
         </div>
       )}
       {renderBotones()}
@@ -634,103 +400,97 @@ export default function ModalFlujo({ show, onClose, categoria, onBack }) {
       {renderBotones()}
     </>
   );
+
   const renderPaso7 = () => (
-  <>
-    <h2 className="text-2xl font-bold text-gray-800">Eventos en {destinoSeleccionado}</h2>
-    <p className="text-gray-500 mt-2 text-sm">
-      {eventosFiltrados.length > 0 
-        ? "Selecciona un evento para agregarlo a tu itinerario" 
-        : "No hay eventos registrados para este destino"}
-    </p>
-    
-    <div className="space-y-4 max-h-[400px] overflow-y-auto mb-6 p-2">
-      {eventosFiltrados.map((evento) => (
-        <div
-          key={evento.slug}
-          onClick={() => setEventoSeleccionado(evento.slug)}
-          className={`w-full flex items-start gap-4 p-3 rounded-xl border-2 transition-all cursor-pointer ${
-            eventoSeleccionado === evento.slug
-              ? 'border-green-500 bg-green-50 shadow-inner'
-              : 'border-gray-200 hover:border-green-300 bg-white'
-          }`}
-        >
-          <img 
-            src={evento.src} 
-            alt={evento.titulo} 
-            className="w-24 h-24 object-cover rounded-lg"
-          />
-          <div className="flex-1">
-            <div className="flex justify-between items-start">
-              <h3 className="font-bold text-gray-800">{evento.titulo}</h3>
-              <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                {evento.fecha} {evento.mes}
-              </span>
-            </div>
-            <p className="text-sm text-gray-600 mt-1">{evento.horario}</p>
-            <p className="text-sm text-gray-500 mt-1 line-clamp-2">{evento.descripcion}</p>
-            <p className="text-purple-600 text-sm mt-2">{evento.precio}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-
-    {renderBotones()}
-  </>
-);
-// Agrega esto en tu componente ModalFlujo
-
-const renderPaso8 = () => (
-  <div className="text-center">
-    {/* Encabezado con decoración */}
-    <div className="relative text-center mb-8">
-      <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-400 to-green-600 w-24 h-1 rounded-full"></div>
-      <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-800 mb-4">
-        ¡Gracias por tu visita!
-      </h2>
-    </div>
-
-    {/* Contenido principal */}
-    <div className="text-center space-y-4 mb-8">
-      <p className="text-gray-700 text-lg leading-relaxed">
-        Ha sido un placer mostrarte la magia y tradición de nuestros pueblos.
+    <>
+      <h2 className="text-2xl font-bold text-gray-800">Eventos en {destinoSeleccionado}</h2>
+      <p className="text-gray-500 mt-2 text-sm">
+        {eventosFiltrados.length > 0 
+          ? "Selecciona un evento para agregarlo a tu itinerario" 
+          : "No hay eventos registrados para este destino"}
       </p>
       
-      <div className="inline-flex items-center bg-green-50/80 border border-green-100 rounded-full px-4 py-2">
-        <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-        </svg>
-        <span className="text-sm font-medium text-green-800">
-          Tu aventura por Michoacán apenas comienza
-        </span>
+      <div className="space-y-4 max-h-[400px] overflow-y-auto mb-6 p-2">
+        {eventosFiltrados.map((evento) => (
+          <div
+            key={evento.slug}
+            onClick={() => setEventoSeleccionado(evento.slug)}
+            className={`w-full flex items-start gap-4 p-3 rounded-xl border-2 transition-all cursor-pointer ${
+              eventoSeleccionado === evento.slug
+                ? 'border-green-500 bg-green-50 shadow-inner'
+                : 'border-gray-200 hover:border-green-300 bg-white'
+            }`}
+          >
+            <img 
+              src={evento.src} 
+              alt={evento.titulo} 
+              className="w-24 h-24 object-cover rounded-lg"
+            />
+            <div className="flex-1">
+              <div className="flex justify-between items-start">
+                <h3 className="font-bold text-gray-800">{evento.titulo}</h3>
+                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                  {evento.fecha} {evento.mes}
+                </span>
+              </div>
+              <p className="text-sm text-gray-600 mt-1">{evento.horario}</p>
+              <p className="text-sm text-gray-500 mt-1 line-clamp-2">{evento.descripcion}</p>
+              <p className="text-purple-600 text-sm mt-2">{evento.precio}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {renderBotones()}
+    </>
+  );
+
+  const renderPaso8 = () => (
+    <div className="text-center">
+      <div className="relative text-center mb-8">
+        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-400 to-green-600 w-24 h-1 rounded-full"></div>
+        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-800 mb-4">
+          ¡Gracias por tu visita!
+        </h2>
+      </div>
+
+      <div className="text-center space-y-4 mb-8">
+        <p className="text-gray-700 text-lg leading-relaxed">
+          Ha sido un placer mostrarte la magia y tradición de nuestros pueblos.
+        </p>
+        
+        <div className="inline-flex items-center bg-green-50/80 border border-green-100 rounded-full px-4 py-2">
+          <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          <span className="text-sm font-medium text-green-800">
+            Tu aventura por Michoacán apenas comienza
+          </span>
+        </div>
+      </div>
+
+      <div className="flex justify-center mb-8">
+        <div className="relative w-48 h-48">
+          <img
+            src="/imagenes/puebloMagico/fin.svg"
+            alt="Gracias"
+            className="w-full h-full object-contain animate-float"
+          />
+          <div className="absolute inset-0 bg-green-400/10 rounded-full -z-10 animate-pulse"></div>
+        </div>
+      </div>
+
+      <div className="flex justify-center">
+        <button
+          onClick={onClose}
+          className="relative overflow-hidden px-8 py-3 rounded-full font-semibold bg-gradient-to-r from-green-500 cursor-pointer to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
+        >
+          <span className="relative z-10">Salir</span>
+          <span className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+        </button>
       </div>
     </div>
-
-    {/* Ilustración */}
-    <div className="flex justify-center mb-8">
-      <div className="relative w-48 h-48">
-        <img
-          src="/imagenes/puebloMagico/fin.svg"
-          alt="Gracias"
-          className="w-full h-full object-contain animate-float"
-        />
-        <div className="absolute inset-0 bg-green-400/10 rounded-full -z-10 animate-pulse"></div>
-      </div>
-    </div>
-
-    {/* Botón de acción */}
-    <div className="flex justify-center">
-      <button
-        onClick={onClose}
-        className="relative overflow-hidden px-8 py-3 rounded-full font-semibold bg-gradient-to-r from-green-500 cursor-pointer to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
-      >
-        <span className="relative z-10">Salir</span>
-        <span className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-      </button>
-    </div>
-  </div>
-);
-
-
+  );
 
   const renderDetallesGrupo = () => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
@@ -813,22 +573,23 @@ const renderPaso8 = () => (
 
   if (!show) return null;
 
-   return (
-  <>
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300">
-      <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300">
-        <div className="text-center mb-4">
-          {paso === 1 ? renderPaso1() : 
-           paso === 2 ? renderPaso2() : 
-           paso === 3 ? renderPaso3() : 
-           paso === 4 ? renderPaso4() :
-           paso === 5 ? renderPaso5() :
-           paso === 6 ? renderPaso6() :
-           paso === 7 ? renderPaso7() :
-           renderPaso8()}
+  return (
+    <>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300">
+        <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300">
+          <div className="text-center mb-4">
+            {paso === 1 ? renderPaso1() : 
+             paso === 2 ? renderPaso2() : 
+             paso === 3 ? renderPaso3() : 
+             paso === 4 ? renderPaso4() :
+             paso === 5 ? renderPaso5() :
+             paso === 6 ? renderPaso6() :
+             paso === 7 ? renderPaso7() :
+             renderPaso8()}
+          </div>
         </div>
       </div>
-    </div>
-    {showDetalles && renderDetallesGrupo()}
-  </>
-)}
+      {showDetalles && renderDetallesGrupo()}
+    </>
+  );
+}
