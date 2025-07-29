@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 
-export default function ModalPueblo({ show, onClose, onSelect, onBack }) {
+export default function ModalPueblo({ show, onClose, onSelect, onBack, onNext }) {
   const opciones = [
     { id: 'Coloniales', label: 'Coloniales', icon: '/imagenes/pueblo/pueblo1.svg' },
     { id: 'naturaleza', label: 'Naturaleza', icon: '/imagenes/pueblo/pueblo2.svg' },
@@ -19,15 +19,11 @@ export default function ModalPueblo({ show, onClose, onSelect, onBack }) {
   };
 
   const handleSiguiente = () => {
-    if (seleccionado) {
-      if (seleccionado === 'pueblos magicos') {
-        onSelect('pueblosMagicos', 1);
-      } else {
-        onSelect('pueblos', seleccionado);;
-      }
-    }
-  };
-
+  if (seleccionado) {
+    console.log("Usuario seleccionó:", seleccionado);
+    onNext(seleccionado);
+  }
+};
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300">
       <div

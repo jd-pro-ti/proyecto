@@ -7,8 +7,8 @@ import playas from '../data/playas';
 import { alojamientos } from '../data/alojamientos';
 import { eventos } from '../data/eventos';
 
-export const useFlujo = ({ show, categoria, onClose, onBack }) => {
-  // Estados del flujo
+export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => {
+  // States
   const [destinoSeleccionado, setDestinoSeleccionado] = useState(null);
   const [tipoViaje, setTipoViaje] = useState(null);
   const [detallesPersonas, setDetallesPersonas] = useState({ adultos: 1, ninos: 0, bebes: 0 });
@@ -17,8 +17,6 @@ export const useFlujo = ({ show, categoria, onClose, onBack }) => {
   const [hotelSeleccionado, setHotelSeleccionado] = useState(null);
   const [habitacionSeleccionada, setHabitacionSeleccionada] = useState(null);
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
-  
-  // Estados para el control del flujo
   const [paso, setPaso] = useState(1);
   const [seleccion, setSeleccion] = useState({ destino: null, compania: null });
   const [showDetalles, setShowDetalles] = useState(false);
@@ -27,11 +25,24 @@ export const useFlujo = ({ show, categoria, onClose, onBack }) => {
   const [mesActualInicio, setMesActualInicio] = useState(new Date());
   const [mesActualFin, setMesActualFin] = useState(new Date());
 
-  // Datos y configuraciones
+  // Safe array normalization function
+  const normalizarArray = (input) => {
+    // Ensure input is always treated as an array
+    const arr = Array.isArray(input) ? input : [];
+    
+    return arr.reduce((acc, item) => {
+      if (item && item.slug) {
+        acc[item.slug] = item;
+      }
+      return acc;
+    }, {});
+  };
+
+  // Data maps with safe initialization
   const dataMap = {
-    pueblosMagicos,
-    pueblos,
-    playa: playas,
+    pueblosMagicos: pueblosMagicos || [],
+    pueblos: normalizarArray(pueblos || []),
+    playa: playas || [],
   };
 
   const tituloMap = {
@@ -98,23 +109,20 @@ export const useFlujo = ({ show, categoria, onClose, onBack }) => {
     },
   ];
 
-  // Filtros
-  const hotelesFiltrados = destinoSeleccionado 
-    ? alojamientos.filter(hotel => 
-        hotel.municipio.toLowerCase() === destinoSeleccionado.toLowerCase())
+  // Filtered data with null checks
+  const hotelesFiltrados = destinoSeleccionado
+    ? (alojamientos || []).filter(hotel =>
+        hotel?.municipio?.toLowerCase() === destinoSeleccionado.toLowerCase())
     : [];
 
-  const eventosFiltrados = destinoSeleccionado 
-    ? eventos.filter(evento => 
-        evento.lugar.toLowerCase().includes(destinoSeleccionado.toLowerCase())
-      ) 
+  const eventosFiltrados = destinoSeleccionado
+    ? (eventos || []).filter(evento =>
+        evento?.lugar?.toLowerCase().includes(destinoSeleccionado.toLowerCase()))
     : [];
 
-  // Efectos
+  // Reset states when modal closes
   useEffect(() => {
-    if (!show) {
-      resetearEstados();
-    }
+    if (!show) resetearEstados();
   }, [show]);
 
   const resetearEstados = () => {
@@ -132,6 +140,7 @@ export const useFlujo = ({ show, categoria, onClose, onBack }) => {
     setFechasVisita({ fechaInicio: null, fechaFin: null });
   };
 
+  // Effect for destination selection
   useEffect(() => {
     if (seleccion.destino) {
       const data = dataMap[categoria] || {};
@@ -139,24 +148,27 @@ export const useFlujo = ({ show, categoria, onClose, onBack }) => {
     }
   }, [seleccion.destino, categoria]);
 
+  // Effect for travel type selection
   useEffect(() => {
     if (seleccion.compania) {
       setTipoViaje(seleccion.compania);
     }
   }, [seleccion.compania]);
 
+  // Effect for accommodation need
   useEffect(() => {
     setNecesitaHospedaje(respuesta);
   }, [respuesta]);
 
+  // Effect for travel dates
   useEffect(() => {
     setFechasViaje({
       inicio: fechasVisita.fechaInicio,
-      fin: fechasVisita.fechaFin
+      fin: fechasVisita.fechaFin,
     });
   }, [fechasVisita]);
 
-  // Funciones del flujo
+  // Helper functions
   const toggleOpcion = (opcion) => {
     setSeleccion(prev => ({ ...prev, compania: opcion }));
     if (opcion === 'familia' || opcion === 'amigos') {
@@ -215,23 +227,21 @@ export const useFlujo = ({ show, categoria, onClose, onBack }) => {
 
   const mostrarResumenFinal = () => {
     const resumen = {
-      Destino: destinoSeleccionado,
-      TipoViaje: tipoViaje,
+      Destino: destinoSeleccionado || 'No seleccionado',
+      TipoViaje: tipoViaje || 'No seleccionado',
       DetallesPersonas: detallesPersonas,
       Hospedaje: necesitaHospedaje ? 'Sí' : 'No',
       HotelSeleccionado: hotelSeleccionado || 'No seleccionado',
       Habitacion: habitacionSeleccionada || 'No seleccionada',
       Evento: eventoSeleccionado || 'No seleccionado',
       Fechas: {
-        Inicio: fechasViaje.inicio ? format(fechasViaje.inicio, 'dd/MM/yyyy') : 'No seleccionada',
-        Fin: fechasViaje.fin ? format(fechasViaje.fin, 'dd/MM/yyyy') : 'No seleccionada'
+        Inicio: fechasViaje.inicio ? format(fechasViaje.inicio, 'dd/MM/yyyy', { locale: es }) : 'No seleccionada',
+        Fin: fechasViaje.fin ? format(fechasViaje.fin, 'dd/MM/yyyy', { locale: es }) : 'No seleccionada'
       }
     };
-    
     console.log('Resumen completo del viaje:', resumen);
   };
 
-  // Funciones para el calendario
   const cambiarMes = (tipo, direccion) => {
     const setter = tipo === 'inicio' ? setMesActualInicio : setMesActualFin;
     setter(prev => {
@@ -248,13 +258,9 @@ export const useFlujo = ({ show, categoria, onClose, onBack }) => {
     const ultimoDia = new Date(year, month + 1, 0);
     const dias = [];
 
-    // Días del mes anterior
     const diaSemanaInicio = primerDia.getDay();
-    for (let i = 0; i < diaSemanaInicio; i++) {
-      dias.push(null);
-    }
+    for (let i = 0; i < diaSemanaInicio; i++) dias.push(null);
 
-    // Días del mes actual
     for (let i = 1; i <= ultimoDia.getDate(); i++) {
       dias.push(new Date(year, month, i));
     }
@@ -263,6 +269,8 @@ export const useFlujo = ({ show, categoria, onClose, onBack }) => {
   };
 
   const seleccionarFecha = (fecha, tipo) => {
+    if (!fecha) return;
+    
     if (tipo === 'inicio') {
       setFechasVisita(prev => ({ ...prev, fechaInicio: fecha }));
       if (fechasVisita.fechaFin && fecha > fechasVisita.fechaFin) {
@@ -274,6 +282,17 @@ export const useFlujo = ({ show, categoria, onClose, onBack }) => {
       }
     }
   };
+
+  // Filter data by subcategory if applicable
+  const datosOriginales = dataMap[categoria] || {};
+  const datosFiltrados =
+    categoria === 'pueblos' && subcategoria
+      ? Object.fromEntries(
+          Object.entries(datosOriginales).filter(
+            ([_, item]) => item?.categoria?.toLowerCase() === subcategoria?.toLowerCase()
+          )
+        )
+      : datosOriginales;
 
   return {
     // Estados
@@ -294,15 +313,15 @@ export const useFlujo = ({ show, categoria, onClose, onBack }) => {
     mesActualFin,
     hotelesFiltrados,
     eventosFiltrados,
-    
+
     // Datos
     dataMap,
     tituloMap,
     opcionesCompania,
     habitaciones,
-    datos: dataMap[categoria] || {},
-    datosLista: Object.entries(dataMap[categoria] || {}),
-    
+    datos: datosFiltrados,
+    datosLista: Object.entries(datosFiltrados),
+
     // Funciones
     toggleOpcion,
     toggleSeleccion,

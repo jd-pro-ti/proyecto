@@ -10,6 +10,7 @@ export default function Home() {
   const [showFlujo, setShowFlujo] = useState(false);
   const [showPueblo, setShowPueblo] = useState(false); // Nuevo estado para ModalPueblo
   const [categoria, setCategoria] = useState(null);
+  const [subcategoria, setSubcategoria] = useState(null);
   const [seleccionFinal, setSeleccionFinal] = useState(null);
 
   const handleSelect = (categoriaSeleccionada) => {
@@ -38,11 +39,16 @@ export default function Home() {
   };
 
   const handleNext = (seleccionadoId) => {
-    setSeleccionFinal(seleccionadoId);
-    console.log("Usuario seleccionó:", seleccionadoId);
-    setShowFlujo(false);
-    setShowPueblo(false);
-  };
+  if (seleccionadoId === 'pueblos magicos') {
+    setCategoria('pueblosMagicos');
+  } else {
+    setCategoria('pueblos'); // Esto se usa para saber que es del archivo pueblos.js
+    setSeleccionFinal(seleccionadoId); // <- Aquí guardamos la subcategoría: naturaleza, coloniales, etc.
+  }
+
+  setShowPueblo(false);
+  setShowFlujo(true);
+};
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-black">
@@ -68,17 +74,20 @@ export default function Home() {
           onClose={handleCerrarFlujo}
           onBack={handleVolver}
           onNext={handleNext}
+          subcategoria={seleccionFinal} 
         />
       )}
 
       {showPueblo && (
-        <ModalPueblo
-          show={showPueblo}
-          onClose={handleCerrarFlujo}
-          onBack={handleVolver}
-          onNext={handleNext}
-        />
-      )}
+  <ModalPueblo
+    show={showPueblo}
+    onClose={handleCerrarFlujo}
+    onBack={handleVolver}
+    subcategoria={seleccionFinal}
+    onNext={handleNext}  // <-- aquí sólo onNext
+  />
+)}
+
     </main>
   );
 }
