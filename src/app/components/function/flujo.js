@@ -1,14 +1,9 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { pueblosMagicos } from '../data/pueblosMagicos';
-import pueblos from '../data/pueblos';
-import playas from '../data/playas';
-import { alojamientos } from '../data/alojamientos';
-import { eventos } from '../data/eventos';
+import { dataMap, tituloMap, datosExternos } from './consultas';
 
 export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => {
-  // States
   const [destinoSeleccionado, setDestinoSeleccionado] = useState(null);
   const [tipoViaje, setTipoViaje] = useState(null);
   const [detallesPersonas, setDetallesPersonas] = useState({ adultos: 1, ninos: 0, bebes: 0 });
@@ -25,31 +20,7 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
   const [mesActualInicio, setMesActualInicio] = useState(new Date());
   const [mesActualFin, setMesActualFin] = useState(new Date());
 
-  // Safe array normalization function
-  const normalizarArray = (input) => {
-    // Ensure input is always treated as an array
-    const arr = Array.isArray(input) ? input : [];
-    
-    return arr.reduce((acc, item) => {
-      if (item && item.slug) {
-        acc[item.slug] = item;
-      }
-      return acc;
-    }, {});
-  };
-
-  // Data maps with safe initialization
-  const dataMap = {
-    pueblosMagicos: pueblosMagicos || [],
-    pueblos: normalizarArray(pueblos || []),
-    playa: playas || [],
-  };
-
-  const tituloMap = {
-    pueblosMagicos: 'Pueblos Mágicos',
-    pueblos: 'Pueblos',
-    playa: 'Playas',
-  };
+  const { alojamientos, eventos } = datosExternos;
 
   const opcionesCompania = [
     { id: 'solo', label: 'Solo', icon: '/imagenes/playa/playa16.svg' },
@@ -59,57 +30,14 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
   ];
 
   const habitaciones = [
-    { 
-      id: 'sencilla', 
-      nombre: 'Habitación Sencilla', 
-      icono: '/imagenes/puebloMagico/puebloM11.svg',
-      precio: '$800/noche',
-      disponibles: 5,
-      descripcion: '1 cama individual, baño privado'
-    },
-    { 
-      id: 'doble', 
-      nombre: 'Habitación Doble', 
-      icono: '/imagenes/puebloMagico/puebloM12.svg',
-      precio: '$1,200/noche',
-      disponibles: 3,
-      descripcion: '2 camas individuales o 1 cama matrimonial'
-    },
-    { 
-      id: 'suite', 
-      nombre: 'Suite', 
-      icono: '/imagenes/puebloMagico/puebloM13.svg',
-      precio: '$2,000/noche',
-      disponibles: 2,
-      descripcion: 'Amplio espacio con sala de estar'
-    },
-    { 
-      id: 'familiar', 
-      nombre: 'Familiar', 
-      icono: '/imagenes/puebloMagico/puebloM14.svg',
-      precio: '$1,500/noche',
-      disponibles: 4,
-      descripcion: '2 habitaciones conectadas, hasta 4 personas'
-    },
-    { 
-      id: 'ejecutiva', 
-      nombre: 'Ejecutiva', 
-      icono: '/imagenes/puebloMagico/puebloM15.svg',
-      precio: '$1,800/noche',
-      disponibles: 3,
-      descripcion: 'Escritorio amplio y amenities de trabajo'
-    },
-    { 
-      id: 'presidencial', 
-      nombre: 'Presidencial', 
-      icono: '/imagenes/puebloMagico/puebloM16.svg',
-      precio: '$3,500/noche',
-      disponibles: 1,
-      descripcion: 'Lujo máximo con terraza privada'
-    },
+    { id: 'sencilla', nombre: 'Habitación Sencilla', icono: '/imagenes/puebloMagico/puebloM11.svg', precio: '$800/noche', disponibles: 5, descripcion: '1 cama individual, baño privado' },
+    { id: 'doble', nombre: 'Habitación Doble', icono: '/imagenes/puebloMagico/puebloM12.svg', precio: '$1,200/noche', disponibles: 3, descripcion: '2 camas individuales o 1 cama matrimonial' },
+    { id: 'suite', nombre: 'Suite', icono: '/imagenes/puebloMagico/puebloM13.svg', precio: '$2,000/noche', disponibles: 2, descripcion: 'Amplio espacio con sala de estar' },
+    { id: 'familiar', nombre: 'Familiar', icono: '/imagenes/puebloMagico/puebloM14.svg', precio: '$1,500/noche', disponibles: 4, descripcion: '2 habitaciones conectadas, hasta 4 personas' },
+    { id: 'ejecutiva', nombre: 'Ejecutiva', icono: '/imagenes/puebloMagico/puebloM15.svg', precio: '$1,800/noche', disponibles: 3, descripcion: 'Escritorio amplio y amenities de trabajo' },
+    { id: 'presidencial', nombre: 'Presidencial', icono: '/imagenes/puebloMagico/puebloM16.svg', precio: '$3,500/noche', disponibles: 1, descripcion: 'Lujo máximo con terraza privada' },
   ];
 
-  // Filtered data with null checks
   const hotelesFiltrados = destinoSeleccionado
     ? (alojamientos || []).filter(hotel =>
         hotel?.municipio?.toLowerCase() === destinoSeleccionado.toLowerCase())
@@ -120,7 +48,6 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
         evento?.lugar?.toLowerCase().includes(destinoSeleccionado.toLowerCase()))
     : [];
 
-  // Reset states when modal closes
   useEffect(() => {
     if (!show) resetearEstados();
   }, [show]);
@@ -140,7 +67,6 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
     setFechasVisita({ fechaInicio: null, fechaFin: null });
   };
 
-  // Effect for destination selection
   useEffect(() => {
     if (seleccion.destino) {
       const data = dataMap[categoria] || {};
@@ -148,19 +74,16 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
     }
   }, [seleccion.destino, categoria]);
 
-  // Effect for travel type selection
   useEffect(() => {
     if (seleccion.compania) {
       setTipoViaje(seleccion.compania);
     }
   }, [seleccion.compania]);
 
-  // Effect for accommodation need
   useEffect(() => {
     setNecesitaHospedaje(respuesta);
   }, [respuesta]);
 
-  // Effect for travel dates
   useEffect(() => {
     setFechasViaje({
       inicio: fechasVisita.fechaInicio,
@@ -168,7 +91,6 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
     });
   }, [fechasVisita]);
 
-  // Helper functions
   const toggleOpcion = (opcion) => {
     setSeleccion(prev => ({ ...prev, compania: opcion }));
     if (opcion === 'familia' || opcion === 'amigos') {
@@ -270,7 +192,6 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
 
   const seleccionarFecha = (fecha, tipo) => {
     if (!fecha) return;
-    
     if (tipo === 'inicio') {
       setFechasVisita(prev => ({ ...prev, fechaInicio: fecha }));
       if (fechasVisita.fechaFin && fecha > fechasVisita.fechaFin) {
@@ -283,7 +204,6 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
     }
   };
 
-  // Filter data by subcategory if applicable
   const datosOriginales = dataMap[categoria] || {};
   const datosFiltrados =
     categoria === 'pueblos' && subcategoria
@@ -295,7 +215,6 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
       : datosOriginales;
 
   return {
-    // Estados
     paso,
     seleccion,
     destinoSeleccionado,
@@ -314,7 +233,6 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
     hotelesFiltrados,
     eventosFiltrados,
 
-    // Datos
     dataMap,
     tituloMap,
     opcionesCompania,
@@ -322,7 +240,6 @@ export const useFlujo = ({ show, categoria, subcategoria, onClose, onBack }) => 
     datos: datosFiltrados,
     datosLista: Object.entries(datosFiltrados),
 
-    // Funciones
     toggleOpcion,
     toggleSeleccion,
     actualizarDetalles,

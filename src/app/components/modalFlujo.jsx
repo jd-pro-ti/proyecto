@@ -1,6 +1,6 @@
 'use client';
 
-import  {useFlujo}  from './flujo';
+import  {useFlujo}  from './function/flujo';
 
 export default function ModalFlujo({ show, onClose, categoria, onBack }) {
   const {
