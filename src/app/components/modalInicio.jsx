@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { BotonCerrar } from './modals/botones';
 
 export default function ModalInicio({ onClose, onSelect }) {
   const [inputValue, setInputValue] = useState('');
@@ -29,22 +30,26 @@ export default function ModalInicio({ onClose, onSelect }) {
   const handleAutoSelect = (lugar) => {
     const tipoMap = {
       playa: 'playa',
-      pueblos: 'pueblos', // Cambiado de 'pueblosMagicos' a 'pueblos'
+      pueblos: 'pueblos',
       pueblos_magicos: 'pueblosMagicos',
     };
 
     const tipo = tipoMap[lugar.tipo] || 'inicio';
-    onSelect(tipo, 1); // Cambiado a paso 1 para consistencia
+    onSelect(tipo, 1);
   };
 
   const handleSelect = (opcion) => {
-    // Asegúrate de que las opciones coincidan con lo que esperas en el componente padre
     onSelect(opcion, 1);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300"> 
-      <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300"> 
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300">
+      <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300">
+        {/* Botón de cerrar en esquina superior derecha */}
+        <div className="absolute top-4 right-4">
+          <BotonCerrar onClick={onClose} />
+        </div>
+
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800">
             ¿Cuál es tu próximo destino?
@@ -77,38 +82,31 @@ export default function ModalInicio({ onClose, onSelect }) {
           O descubre una experiencia personalizada para ti
         </p>
 
-        <div className="flex justify-between gap-2">
+        <div className="grid grid-cols-3 gap-3">
           <button
             onClick={() => handleSelect('pueblosMagicos')}
-            className="flex-1 flex flex-col items-center gap-1 bg-white hover:bg-amber-50 border border-amber-100 rounded-xl p-3 transition-all hover:shadow-md cursor-pointer"
+            className="flex flex-col items-center gap-2 bg-white hover:bg-amber-50 border border-amber-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
           >
-            <img src="/imagenes/puebloMa.svg" alt="Pueblos mágicos" className="w-20 h-20" />
+            <img src="/imagenes/puebloMa.svg" alt="Pueblos mágicos" className="w-16 h-16" />
             <span className="text-sm font-medium text-gray-700">Pueblos Mágicos</span>
           </button>
 
           <button
             onClick={() => handleSelect('playa')}
-            className="flex-1 flex flex-col items-center gap-1 bg-white hover:bg-blue-50 border border-blue-100 rounded-xl p-3 transition-all hover:shadow-md cursor-pointer"
+            className="flex flex-col items-center gap-2 bg-white hover:bg-blue-50 border border-blue-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
           >
-            <img src="/imagenes/playas.svg" alt="Playas" className="w-20 h-20" />
+            <img src="/imagenes/playas.svg" alt="Playas" className="w-16 h-16" />
             <span className="text-sm font-medium text-gray-700">Playas</span>
           </button>
 
           <button
             onClick={() => handleSelect('pueblos')}
-            className="flex-1 flex flex-col items-center gap-1 bg-white hover:bg-purple-50 border border-purple-100 rounded-xl p-3 transition-all hover:shadow-md cursor-pointer"
+            className="flex flex-col items-center gap-2 bg-white hover:bg-purple-50 border border-purple-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
           >
-            <img src="/imagenes/pueblo.svg" alt="Pueblos" className="w-20 h-20" />
+            <img src="/imagenes/pueblo.svg" alt="Pueblos" className="w-16 h-16" />
             <span className="text-sm font-medium text-gray-700">Pueblos</span>
           </button>
         </div>
-
-        <button
-          onClick={onClose}
-          className="mt-6 mx-auto px-4 py-2 text-gray-500 hover:text-gray-700 cursor-pointer transition font-medium text-sm"
-        >
-          Cerrar
-        </button>
       </div>
     </div>
   );
