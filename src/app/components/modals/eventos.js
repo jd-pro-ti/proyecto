@@ -3,14 +3,13 @@
 import { useState } from 'react';
 import { eventos } from '../../data/eventos';
 import { 
-  BotonCerrar,
   BotonVolver, 
   BotonSiguiente, 
   ContenedorBotones, 
   Espaciador 
 } from './botones';
 
-export default function RenderEventos({ datos, onSiguiente, onVolver, onClose }) {
+export default function RenderEventos({ datos, onSiguiente, onVolver }) {
   const [eventoSeleccionado, setEventoSeleccionado] = useState(datos.evento);
   
   const eventosFiltrados = datos.destino 
@@ -27,20 +26,13 @@ export default function RenderEventos({ datos, onSiguiente, onVolver, onClose })
 
   return (
     <div className="relative p-6 w-full max-w-2xl">
-      {/* Encabezado con título y botón cerrar alineados */}
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800">Eventos en {datos.destino}</h2>
-          <p className="text-gray-500 mt-1 text-sm">
-            {eventosFiltrados.length > 0 
-              ? "Selecciona un evento para agregarlo a tu itinerario (opcional)" 
-              : "No hay eventos registrados para este destino"}
-          </p>
-        </div>
-        <BotonCerrar onClick={onClose} />
-      </div>
-
-      {/* Lista de eventos */}
+      <h2 className="text-2xl font-bold text-gray-800">Eventos en {datos.destino}</h2>
+      <p className="text-gray-500 mt-2 text-sm">
+        {eventosFiltrados.length > 0 
+          ? "Selecciona un evento para agregarlo a tu itinerario (opcional)" 
+          : "No hay eventos registrados para este destino"}
+      </p>
+      
       <div className="space-y-4 max-h-[400px] overflow-y-auto mb-6 p-2">
         {eventosFiltrados.map((evento) => (
           <div

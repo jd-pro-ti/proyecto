@@ -46,17 +46,12 @@ export default function RenderDestino({ datos, onSiguiente, onVolver, onClose })
   };
 
   const handleSiguiente = () => {
-    if (!seleccion || detallesPersonas.adultos < 1) return;
-    
-    // Obtener el nombre del destino seleccionado
-    const destinoSeleccionado = dataMap[datos.categoria][seleccion];
-    const nombreDestino = destinoSeleccionado ? destinoSeleccionado.nombre : '';
-    
-    onSiguiente({ 
-      destino: nombreDestino, // Enviamos el nombre en lugar del ID
-      detallesPersonas 
-    });
-  };
+  if (!seleccion || detallesPersonas.adultos < 1) return;
+  onSiguiente({ 
+    destino: seleccion,
+    detallesPersonas 
+  });
+};
 
   return (
     <div className="relative p-6 w-full max-w-2xl">

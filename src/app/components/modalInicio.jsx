@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { BotonCerrar } from './modals/botones';
 
-export default function ModalInicio({ onClose, onSelect }) {
+export default function ModalInicio({ onClose, onSelect}) {
   const [inputValue, setInputValue] = useState('');
   const [filtered, setFiltered] = useState([]);
 
@@ -28,14 +28,14 @@ export default function ModalInicio({ onClose, onSelect }) {
   };
 
   const handleAutoSelect = (lugar) => {
-    const tipoMap = {
-      playa: 'playa',
-      pueblos: 'pueblos',
-      pueblos_magicos: 'pueblosMagicos',
-    };
+  const tipoMap = {
+    playa: 'playa',
+    pueblos: 'pueblos',
+    pueblos_magicos: 'pueblosMagicos',
+  };
 
-    const tipo = tipoMap[lugar.tipo] || 'inicio';
-    onSelect(tipo, 1);
+  const tipo = tipoMap[lugar.tipo] || 'inicio';
+    onSelect(tipo, 2);
   };
 
   const handleSelect = (opcion) => {
