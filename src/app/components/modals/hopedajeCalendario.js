@@ -85,7 +85,7 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
       {/* Encabezado con título y botón cerrar */}
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">¿Te quieres hospedar?</h2>
+          <h2 className="text-2xl font-bold text-[#364153] mb-2">¿Te quieres hospedar?</h2>
           <p className="text-gray-500 text-sm">Recibe recomendaciones personalizadas</p>
         </div>
         <BotonCerrar onClick={onClose} />
@@ -96,7 +96,7 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
           onClick={() => handleRespuesta(true)}
           className={`px-8 py-4 rounded-lg font-medium text-lg transition ${
             respuesta === true
-              ? 'bg-green-600 text-white shadow-md'
+              ? 'bg-[#7CB936] text-white shadow-md'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
@@ -106,8 +106,8 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
           onClick={() => handleRespuesta(false)}
           className={`px-8 py-4 rounded-lg font-medium text-lg transition ${
             respuesta === false
-              ? 'bg-red-600 text-white shadow-md'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              ? 'bg-[#EA5261] text-white shadow-md'
+              : 'bg-gray-200 text-[#364153] hover:bg-gray-300'
           }`}
         >
           No
@@ -158,7 +158,7 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
                     fechas.inicio && dia.toDateString() === fechas.inicio.toDateString() ?
                     'bg-green-100 border-2 border-green-600' :
                     fechas.fin && dia.toDateString() === fechas.fin.toDateString() ?
-                    'bg-red-100 border-2 border-red-600' :
+                    'bg-red-100 border-2 border-[#EA5261]' :
                     fechas.inicio && fechas.fin && dia > fechas.inicio && dia < fechas.fin ?
                     'bg-blue-50 border border-blue-200' :
                     'hover:bg-gray-100 border border-transparent'
@@ -174,12 +174,12 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
             <div className="mt-3 text-center text-sm">
               <p className="font-medium">
                 {fechas.inicio && (
-                  <span className="text-green-600">
+                  <span className="text-[#059669]">
                     Llegada: {format(fechas.inicio, 'dd/MM/yyyy')}
                   </span>
                 )}
                 {fechas.fin && (
-                  <span className="text-red-600">
+                  <span className="text-[#EA5261]">
                     {fechas.inicio ? ' - ' : ''}Salida: {format(fechas.fin, 'dd/MM/yyyy')}
                   </span>
                 )}

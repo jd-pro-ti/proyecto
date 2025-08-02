@@ -37,7 +37,7 @@ export default function RenderHoteles({ datos, onSiguiente, onVolver, onClose })
       {/* Encabezado con título y botón cerrar alineados */}
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">Hoteles en {datos.destino}</h2>
+          <h2 className="text-2xl font-bold text-[#364153]">Hoteles en {datos.destino}</h2>
           <p className="text-gray-500 mt-1 text-sm">Elige tu alojamiento ideal</p>
         </div>
         <BotonCerrar onClick={onClose} />
@@ -52,8 +52,8 @@ export default function RenderHoteles({ datos, onSiguiente, onVolver, onClose })
                 onClick={() => toggleHotel(hotel.name)}
                 className={`flex-shrink-0 w-80 cursor-pointer rounded-xl border-2 overflow-hidden transition-all ${
                   hotelSeleccionado === hotel.name
-                    ? 'border-green-500 bg-green-50 shadow-inner'
-                    : 'border-gray-200 hover:border-green-300 bg-white'
+                    ? 'border-[#7CB936] bg-green-50 shadow-inner'
+                    : 'border-gray-200 hover:border-[#059669] bg-white'
                 }`}
                 style={{ scrollSnapAlign: 'start' }}
               >
@@ -68,12 +68,12 @@ export default function RenderHoteles({ datos, onSiguiente, onVolver, onClose })
                   </div>
                 </div>
                 <div className="p-4">
-                  <h3 className="font-bold text-lg text-gray-800">{hotel.name}</h3>
+                  <h3 className="font-bold text-lg text-[#364153]">{hotel.name}</h3>
                   <p className="text-sm text-gray-600 mt-1 line-clamp-2">{hotel.descripcion}</p>
                   <div className="flex items-center justify-between mt-3">
                     <div className="flex items-center">
                       <span className="text-yellow-500">★</span>
-                      <span className="text-gray-700 ml-1">{hotel.rating}</span>
+                      <span className="text-[#364153] ml-1">{hotel.rating}</span>
                       {hotel.internet && (
                         <span className="ml-3 text-xs text-gray-500 flex items-center">
                           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,7 +91,7 @@ export default function RenderHoteles({ datos, onSiguiente, onVolver, onClose })
         </div>
       ) : (
         <div className="my-8 text-center">
-          <p className="text-gray-500">No hay hoteles disponibles para este destino.</p>
+          <p className="text-[#6A7282]">No hay hoteles disponibles para este destino.</p>
         </div>
       )}
 

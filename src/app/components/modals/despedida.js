@@ -3,7 +3,7 @@ export default function RenderFinal({ onClose, datos }) {
   return (
     <div className="text-center">
       <div className="relative text-center mb-8">
-        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-400 to-green-600 w-24 h-1 rounded-full"></div>
+        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-400 text-[#059669] w-24 h-1 rounded-full"></div>
         <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-800 mb-4">
           ¡Gracias por tu visita!
         </h2>

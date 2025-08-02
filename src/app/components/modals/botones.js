@@ -6,8 +6,8 @@ export function BotonVolver({ onClick }) {
   return (
     <button
       onClick={onClick}
-      className="p-2 text-gray-600 hover:text-gray-800 rounded-full hover:bg-gray-100 transition-all 
-                 duration-300 ease-in-out transform hover:-translate-x-1 active:scale-95"
+      className="p-2 text-[#059669] rounded-full hover:bg-gray-100 transition-all 
+                duration-300 ease-in-out transform hover:-translate-x-1 active:scale-95"
       aria-label="Volver"
       >
       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -24,7 +24,7 @@ export function BotonSiguiente({ onClick, disabled = false }) {
       disabled={disabled}
       className={`p-2 rounded-full transition-all duration-300 ease-in-out 
                 ${disabled ? 'text-gray-400 cursor-not-allowed' : 
-                  'text-green-600 hover:bg-green-50 hover:shadow-md transform hover:translate-x-1 active:scale-95'}
+                  'text-[#059669] hover:bg-green-50 hover:shadow-md transform hover:translate-x-1 active:scale-95'}
                 relative overflow-hidden group`}
       aria-label="Siguiente"
     >
@@ -42,7 +42,7 @@ export function BotonCerrar({ onClick }) {
   return (
     <button
       onClick={onClick}
-      className="p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-red-50 transition-all 
+      className="p-2 text-[#364153]  hover:text-[#EA5261] rounded-full hover:bg-red-50 transition-all 
                  duration-300 ease-in-out transform hover:scale-110 active:scale-95"
       aria-label="Cerrar"
     >

@@ -51,7 +51,7 @@ export default function ModalInicio({ onClose, onSelect }) {
         </div>
 
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">
+          <h2 className="text-2xl font-bold text-[#1C3458]">
             ¿Cuál es tu próximo destino?
           </h2>
         </div>
@@ -61,15 +61,15 @@ export default function ModalInicio({ onClose, onSelect }) {
           placeholder="Busca tu destino..."
           value={inputValue}
           onChange={handleInput}
-          className="w-full border text-black border-gray-300 rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="w-full border text-black border-[#6A7282] rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-[#6A7282]"
         />
 
         {filtered.length > 0 && (
-          <div className="bg-gray-100 rounded-md p-2 mb-4 max-h-32 overflow-y-auto text-black">
+          <div className="bg-[#6A7282]/10 rounded-md p-2 mb-4 max-h-32 overflow-y-auto text-black">
             {filtered.map((lugar, idx) => (
               <div
                 key={idx}
-                className="p-2 cursor-pointer hover:bg-gray-200 rounded"
+                className="p-2 cursor-pointer hover:bg-[#6A7282]/20 rounded"
                 onClick={() => handleAutoSelect(lugar)}
               >
                 {lugar.nombre}
@@ -78,7 +78,7 @@ export default function ModalInicio({ onClose, onSelect }) {
           </div>
         )}
 
-        <p className="text-center text-gray-600 mb-4">
+        <p className="text-center text-[#6A7282] mb-4">
           O descubre una experiencia personalizada para ti
         </p>
 
@@ -88,15 +88,15 @@ export default function ModalInicio({ onClose, onSelect }) {
             className="flex flex-col items-center gap-2 bg-white hover:bg-amber-50 border border-amber-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
           >
             <img src="/imagenes/puebloMa.svg" alt="Pueblos mágicos" className="w-16 h-16" />
-            <span className="text-sm font-medium text-gray-700">Pueblos Mágicos</span>
+            <span className="text-sm font-medium text-[#6A7282]">Pueblos Mágicos</span>
           </button>
 
           <button
             onClick={() => handleSelect('playa')}
-            className="flex flex-col items-center gap-2 bg-white hover:bg-blue-50 border border-blue-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
+            className="flex flex-col items-center gap-2 bg-white hover:text-[#7CB936] border border-blue-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
           >
             <img src="/imagenes/playas.svg" alt="Playas" className="w-16 h-16" />
-            <span className="text-sm font-medium text-gray-700">Playas</span>
+            <span className="text-sm font-medium text-[#6A7282]">Playas</span>
           </button>
 
           <button
@@ -104,7 +104,7 @@ export default function ModalInicio({ onClose, onSelect }) {
             className="flex flex-col items-center gap-2 bg-white hover:bg-purple-50 border border-purple-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
           >
             <img src="/imagenes/pueblo.svg" alt="Pueblos" className="w-16 h-16" />
-            <span className="text-sm font-medium text-gray-700">Pueblos</span>
+            <span className="text-sm font-medium text-[#6A7282]">Pueblos</span>
           </button>
         </div>
       </div>
