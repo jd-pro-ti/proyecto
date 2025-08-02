@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 
-export default function ModalPueblo({ show, onClose, datos, onBack, onNext }) {
+export default function ModalPueblo({ show, onClose, onSelect, onBack, onNext }) {
   const opciones = [
     { id: 'Coloniales', label: 'Coloniales', icon: '/imagenes/pueblo/pueblo1.svg' },
     { id: 'naturaleza', label: 'Naturaleza', icon: '/imagenes/pueblo/pueblo2.svg' },
@@ -19,21 +19,18 @@ export default function ModalPueblo({ show, onClose, datos, onBack, onNext }) {
   };
 
   const handleSiguiente = () => {
-    if (seleccionado) {
-      console.log("Usuario seleccionó:", seleccionado);
-      onNext({
-        ...datos,         
-        tipo: seleccionado, // agrega o actualiza "tipo"
-        seleccion: seleccionado // agrega la categoría seleccionada
-      });
-    }
-  };
-
+  if (seleccionado) {
+    console.log("Usuario seleccionó:", seleccionado);
+    onNext(seleccionado);
+  }
+};
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300">
-      <div className={`bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300 ${
-        show ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-      }`}>
+      <div
+        className={`bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300 ${
+          show ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        }`}
+      >
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800">¿Qué tipo de pueblo buscas?</h2>
           <p className="text-gray-500 mt-2 text-sm">Elige una opción</p>
