@@ -45,7 +45,7 @@ export default function RenderDestino({ datos, onSiguiente, onVolver, onClose })
     }));
   };
 
-  const handleSiguiente = () => {
+ const handleSiguiente = () => {
     if (!seleccion || detallesPersonas.adultos < 1) return;
     
     const destinoSeleccionado = dataMap[datos.categoria][seleccion];
@@ -56,6 +56,7 @@ export default function RenderDestino({ datos, onSiguiente, onVolver, onClose })
       detallesPersonas 
     });
   };
+
 
   return (
     <div className="relative p-6 w-full max-w-2xl">

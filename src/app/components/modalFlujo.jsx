@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import RenderDestino from './modals/destino';
 import RenderHospedaje from './modals/hopedajeCalendario';
 import RenderHoteles from './modals/hoteles';
@@ -13,63 +13,69 @@ export default function ModalFlujo({ show, onClose, categoria, onBack }) {
   const [saltadoHospedaje, setSaltadoHospedaje] = useState(false);
   const [saltadoHoteles, setSaltadoHoteles] = useState(false);
   const [datosCompartidos, setDatosCompartidos] = useState({
-    categoria,
-    destino: null,
+    categoria: categoria?.tipo || categoria || null,
+    destino: categoria?.destino || null,
     tipoViaje: null,
-    detallesPersonas: { adultos: 0, ninos: 0, bebes: 0 },
+    detallesPersonas: categoria?.detallesPersonas || { adultos: 1, ninos: 0, bebes: 0 },
     necesitaHospedaje: null,
     fechas: { inicio: null, fin: null },
     hotel: null,
     habitacion: null,
-    evento: null
+    evento: null,
+    seleccion:null
   });
+
+  // Efecto para manejar el paso inicial según los datos recibidos
+  useEffect(() => {
+    if (categoria?.paso === 2 || categoria?.destino) {
+      setPaso(2); // Saltar al paso 2 si viene de búsqueda
+    }
+  }, [categoria]);
 
   if (!show) return null;
 
- const handleSiguiente = (nuevosDatos = {}) => {
-  setDatosCompartidos(prev => {
-    const nuevos = { ...prev, ...nuevosDatos };
+  const handleSiguiente = (nuevosDatos = {}) => {
+    setDatosCompartidos(prev => {
+      const nuevos = { ...prev, ...nuevosDatos };
+      let siguientePaso = paso + 1;
 
-    let siguientePaso = paso + 1;
+      // Lógica para saltar pasos
+      if (paso === 2 && nuevos.necesitaHospedaje === false) {
+        siguientePaso = 5;
+        setSaltadoHospedaje(true);
+      } else {
+        setSaltadoHospedaje(false);
+      }
 
-    if (paso === 2 && nuevos.necesitaHospedaje === false) {
-      siguientePaso = 5;
-      setSaltadoHospedaje(true);
-    } else {
-      setSaltadoHospedaje(false);
-    }
+      if (paso === 3 && nuevos.sinHoteles) {
+        siguientePaso = 5;
+        setSaltadoHoteles(true);
+      } else {
+        setSaltadoHoteles(false);
+      }
 
-   if (paso === 3 && nuevos.sinHoteles) {
-  siguientePaso = 5;
-  setSaltadoHoteles(true);
-} else {
-  setSaltadoHoteles(false);
-}
-    setPaso(siguientePaso);
-    return nuevos;
-  });
-};
-
-
-
+      setPaso(siguientePaso);
+      return nuevos;
+    });
+  };
 
   const handleVolver = () => {
-  if (paso === 5) {
-    if (saltadoHoteles) {
-      setPaso(3); // volver a hoteles si los saltaste
-    } else if (saltadoHospedaje) {
-      setPaso(2); // volver a hospedaje si lo saltaste
+    if (paso === 5) {
+      if (saltadoHoteles) {
+        setPaso(3);
+      } else if (saltadoHospedaje) {
+        setPaso(2);
+      } else {
+        setPaso(4);
+      }
+    } else if (paso === 4 && saltadoHospedaje) {
+      setPaso(2);
+    } else if (paso > 1) {
+      setPaso(p => p - 1);
     } else {
-      setPaso(4); // volver normalmente a habitaciones
+      onBack();
     }
-  } else if (paso === 4 && saltadoHospedaje) {
-    setPaso(2); // si se saltó hospedaje, vuelve a él desde habitaciones
-  } else if (paso > 1) {
-    setPaso(p => p - 1); // comportamiento normal
-  } else {
-    onBack(); // si es paso 1, salir
-  }
-};
+  };
 
   const renderPaso = () => {
     switch(paso) {
