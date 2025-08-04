@@ -5,6 +5,7 @@ import ModalInicio from './components/modalInicio';
 import ModalFlujo from './components/modalFlujo';
 import ModalPueblo from './components/modalPueblo'; // Asegúrate de importar ModalPueblo
 
+
 export default function Home() {
   const [showInicio, setShowInicio] = useState(false);
   const [showFlujo, setShowFlujo] = useState(false);
@@ -30,6 +31,7 @@ export default function Home() {
     setShowPueblo(false); // También cerrar ModalPueblo si está abierto
     setCategoria(null);
     setSeleccionFinal(null);
+    setSubcategoria(null);
   };
 
   const handleVolver = () => {
@@ -38,17 +40,23 @@ export default function Home() {
     setShowInicio(true);
   };
 
-  const handleNext = (seleccionadoId) => {
-  if (seleccionadoId === 'pueblos magicos') {
+ const handleNext = ({ subcategoria }) => {
+  setSubcategoria(subcategoria);
+
+  if (subcategoria === 'pueblos magicos') {
     setCategoria('pueblosMagicos');
+  } else if (categoria === 'playas') {
+    setCategoria('playas');
   } else {
-    setCategoria('pueblos'); // Esto se usa para saber que es del archivo pueblos.js
-    setSeleccionFinal(seleccionadoId); // <- Aquí guardamos la subcategoría: naturaleza, coloniales, etc.
+    setCategoria('pueblos');
   }
 
+  setSeleccionFinal(subcategoria);
   setShowPueblo(false);
   setShowFlujo(true);
 };
+
+
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-black">
@@ -74,7 +82,7 @@ export default function Home() {
           onClose={handleCerrarFlujo}
           onBack={handleVolver}
           onNext={handleNext}
-          subcategoria={seleccionFinal} 
+          subCategoria={subcategoria} 
         />
       )}
 
@@ -83,7 +91,7 @@ export default function Home() {
     show={showPueblo}
     onClose={handleCerrarFlujo}
     onBack={handleVolver}
-    subcategoria={seleccionFinal}
+    subCategoria={subcategoria}
     onNext={handleNext}  // <-- aquí sólo onNext
   />
 )}

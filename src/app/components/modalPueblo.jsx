@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
 
-export default function ModalPueblo({ show, onClose, onSelect, onBack, onNext }) {
+export default function ModalPueblo({ show, onClose, subCategoria, onBack, onNext }) {
   const opciones = [
-    { id: 'Coloniales', label: 'Coloniales', icon: '/imagenes/pueblo/pueblo1.svg' },
+    { id: 'coloniales', label: 'Coloniales', icon: '/imagenes/pueblo/pueblo1.svg' },
     { id: 'naturaleza', label: 'Naturaleza', icon: '/imagenes/pueblo/pueblo2.svg' },
     { id: 'artesanias', label: 'Artesanias', icon: '/imagenes/pueblo/pueblo3.svg' },
     { id: 'gastronomia', label: 'Gastronomia', icon: '/imagenes/pueblo/pueblo4.svg' },
@@ -20,8 +20,8 @@ export default function ModalPueblo({ show, onClose, onSelect, onBack, onNext })
 
   const handleSiguiente = () => {
   if (seleccionado) {
-    console.log("Usuario seleccionó:", seleccionado);
-    onNext(seleccionado);
+    onNext({ subcategoria: seleccionado });
+
   }
 };
   return (

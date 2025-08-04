@@ -92,7 +92,7 @@ export default function ModalInicio({ onClose, onSelect}) {
           </button>
 
           <button
-            onClick={() => handleSelect('playa')}
+            onClick={() => handleSelect('playas')}
             className="flex flex-col items-center gap-2 bg-white hover:text-[#7CB936] border border-blue-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
           >
             <img src="/imagenes/playas.svg" alt="Playas" className="w-16 h-16" />

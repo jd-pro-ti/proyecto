@@ -7,8 +7,9 @@ import RenderHoteles from './modals/hoteles';
 import RenderHabitaciones from './modals/habitaciones';
 import RenderEventos from './modals/eventos';
 import RenderFinal from './modals/despedida';
+import { set } from 'date-fns';
 
-export default function ModalFlujo({ show, onClose, categoria, onBack }) {
+export default function ModalFlujo({ show, onClose, categoria, onBack, subCategoria }) {
   const [paso, setPaso] = useState(1);
   const [saltadoHospedaje, setSaltadoHospedaje] = useState(false);
   const [saltadoHoteles, setSaltadoHoteles] = useState(false);
@@ -22,7 +23,9 @@ export default function ModalFlujo({ show, onClose, categoria, onBack }) {
     hotel: null,
     habitacion: null,
     evento: null,
-    seleccion:null
+    seleccion:null,
+    subCategoria: subCategoria || null, 
+
   });
 
   // Efecto para manejar el paso inicial según los datos recibidos
@@ -58,7 +61,7 @@ export default function ModalFlujo({ show, onClose, categoria, onBack }) {
       return nuevos;
     });
   };
-
+  console.log("modalflijo.jsx: ", subCategoria)
   const handleVolver = () => {
     if (paso === 5) {
       if (saltadoHoteles) {
