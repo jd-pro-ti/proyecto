@@ -2,50 +2,56 @@
 
 import { useState } from 'react';
 import { BotonCerrar } from './modals/botones';
+import { pueblosMagicos } from '../data/pueblosMagicos';
+import pueblos from '../data/pueblos';
+import playas from '../data/playas';
 
-export default function ModalInicio({ onClose, onSelect}) {
+export default function ModalInicio({ onClose, onSelect }) {
   const [inputValue, setInputValue] = useState('');
   const [filtered, setFiltered] = useState([]);
 
-  const destinos = {
-    playa: ['Lazaro Cardenas', 'Caleta de Campos', 'Maruata'],
-    pueblos_magicos: ['Patzcuaro', 'Tlalpujahua', 'Cuitzeo'],
-    pueblos: ['Charo', 'Tacambaro', 'Turicato', 'Zinapecuaro'],
-  };
+  // Convertir los diccionarios a arrays con categoría incluida
+  const playasArray = Object.entries(playas).map(([slug, data]) => ({
+    ...data,
+    slug,
+    categoria: 'playas'
+  }));
 
-  const allLugares = Object.entries(destinos).flatMap(([tipo, lugares]) =>
-    lugares.map((lugar) => ({ nombre: lugar, tipo }))
-  );
+  const pueblosMagicosArray = pueblosMagicos.map((p) => ({
+    ...p,
+    categoria: 'pueblosMagicos'
+  }));
+
+  const pueblosArray = pueblos.map((p) => ({
+    ...p,
+    categoria: 'pueblos'
+  }));
+
+  const allDestinos = [...playasArray, ...pueblosMagicosArray, ...pueblosArray];
 
   const handleInput = (e) => {
     const valor = e.target.value;
     setInputValue(valor);
-    setFiltered(
-      allLugares.filter((l) =>
-        l.nombre.toLowerCase().includes(valor.toLowerCase())
-      )
+    const resultados = allDestinos.filter((l) =>
+      l.nombre.toLowerCase().includes(valor.toLowerCase())
     );
+    setFiltered(resultados);
   };
 
   const handleAutoSelect = (lugar) => {
-  const tipoMap = {
-    playa: 'playa',
-    pueblos: 'pueblos',
-    pueblos_magicos: 'pueblosMagicos',
+    // Solo se envía la categoría y el nombre del lugar
+    onSelect(lugar.categoria, { nombre: lugar.nombre });
   };
 
-  const tipo = tipoMap[lugar.tipo] || 'inicio';
-    onSelect(tipo, 2);
-  };
-
-  const handleSelect = (opcion) => {
-    onSelect(opcion, 1);
+  const handleSelect = (categoria) => {
+    // Envía solo la categoría (sin destino específico)
+    onSelect(categoria, null);
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300">
       <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300">
-        {/* Botón de cerrar en esquina superior derecha */}
+        {/* Botón cerrar */}
         <div className="absolute top-4 right-4">
           <BotonCerrar onClick={onClose} />
         </div>
@@ -65,14 +71,18 @@ export default function ModalInicio({ onClose, onSelect}) {
         />
 
         {filtered.length > 0 && (
-          <div className="bg-[#6A7282]/10 rounded-md p-2 mb-4 max-h-32 overflow-y-auto text-black">
+          <div className="bg-[#6A7282]/10 rounded-md p-2 mb-4 max-h-48 overflow-y-auto text-black">
             {filtered.map((lugar, idx) => (
               <div
                 key={idx}
-                className="p-2 cursor-pointer hover:bg-[#6A7282]/20 rounded"
+                className="p-2 cursor-pointer hover:bg-[#6A7282]/20 rounded flex gap-2 items-center"
                 onClick={() => handleAutoSelect(lugar)}
               >
-                {lugar.nombre}
+                <img src={lugar.icono} alt={lugar.nombre} className="w-6 h-6" />
+                <div>
+                  <div className="font-medium">{lugar.nombre}</div>
+                  <div className="text-sm text-gray-500 capitalize">{lugar.categoria}</div>
+                </div>
               </div>
             ))}
           </div>

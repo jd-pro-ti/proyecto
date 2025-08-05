@@ -3,35 +3,35 @@
 import { useState } from 'react';
 import ModalInicio from './components/modalInicio';
 import ModalFlujo from './components/modalFlujo';
-import ModalPueblo from './components/modalPueblo'; // Asegúrate de importar ModalPueblo
-
+import ModalPueblo from './components/modalPueblo';
 
 export default function Home() {
   const [showInicio, setShowInicio] = useState(false);
   const [showFlujo, setShowFlujo] = useState(false);
-  const [showPueblo, setShowPueblo] = useState(false); // Nuevo estado para ModalPueblo
+  const [showPueblo, setShowPueblo] = useState(false);
   const [categoria, setCategoria] = useState(null);
   const [subcategoria, setSubcategoria] = useState(null);
+  const [destino, setdestino] = useState(null);
   const [seleccionFinal, setSeleccionFinal] = useState(null);
 
-  const handleSelect = (categoriaSeleccionada) => {
+  const handleSelect = (categoriaSeleccionada, lugar) => {
     setCategoria(categoriaSeleccionada);
+    setdestino(lugar); // Guardar el destino seleccionado (puede ser null si fue clic en botón)
     setShowInicio(false);
-    
-    // Mostrar ModalFlujo o ModalPueblo según la categoría seleccionada
-    if (categoriaSeleccionada === 'pueblos') {
-      setShowPueblo(true); // Mostrar ModalPueblo para "Pueblos"
+    if (categoriaSeleccionada === 'pueblos' && !lugar) {
+      setShowPueblo(true);
     } else {
-      setShowFlujo(true); // Mostrar ModalFlujo para otras categorías
+      setShowFlujo(true);
     }
   };
 
   const handleCerrarFlujo = () => {
     setShowFlujo(false);
-    setShowPueblo(false); // También cerrar ModalPueblo si está abierto
+    setShowPueblo(false);
     setCategoria(null);
     setSeleccionFinal(null);
     setSubcategoria(null);
+    setdestino(null);
   };
 
   const handleVolver = () => {
@@ -40,23 +40,21 @@ export default function Home() {
     setShowInicio(true);
   };
 
- const handleNext = ({ subcategoria }) => {
-  setSubcategoria(subcategoria);
+  const handleNext = ({ subcategoria }) => {
+    setSubcategoria(subcategoria);
 
-  if (subcategoria === 'pueblos magicos') {
-    setCategoria('pueblosMagicos');
-  } else if (categoria === 'playas') {
-    setCategoria('playas');
-  } else {
-    setCategoria('pueblos');
-  }
+    if (subcategoria === 'pueblos magicos') {
+      setCategoria('pueblosMagicos');
+    } else if (categoria === 'playas') {
+      setCategoria('playas');
+    } else {
+      setCategoria('pueblos');
+    }
 
-  setSeleccionFinal(subcategoria);
-  setShowPueblo(false);
-  setShowFlujo(true);
-};
-
-
+    setSeleccionFinal(subcategoria);
+    setShowPueblo(false);
+    setShowFlujo(true);
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-black">
@@ -71,7 +69,7 @@ export default function Home() {
         <ModalInicio
           show={showInicio}
           onClose={() => setShowInicio(false)}
-          onSelect={handleSelect}
+          onSelect={handleSelect} 
         />
       )}
 
@@ -82,20 +80,21 @@ export default function Home() {
           onClose={handleCerrarFlujo}
           onBack={handleVolver}
           onNext={handleNext}
-          subCategoria={subcategoria} 
+          subCategoria={subcategoria}
+          destino={destino} 
         />
       )}
 
       {showPueblo && (
-  <ModalPueblo
-    show={showPueblo}
-    onClose={handleCerrarFlujo}
-    onBack={handleVolver}
-    subCategoria={subcategoria}
-    onNext={handleNext}  // <-- aquí sólo onNext
-  />
-)}
-
+        <ModalPueblo
+          show={showPueblo}
+          onClose={handleCerrarFlujo}
+          onBack={handleVolver}
+          subCategoria={subcategoria}
+          onNext={handleNext}
+          destino={destino} 
+        />
+      )}
     </main>
   );
 }
