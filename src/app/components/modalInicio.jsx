@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { BotonCerrar } from './modals/botones';
 import { pueblosMagicos } from '../data/pueblosMagicos';
 import pueblos from '../data/pueblos';
@@ -8,43 +8,46 @@ import playas from '../data/playas';
 
 export default function ModalInicio({ onClose, onSelect }) {
   const [inputValue, setInputValue] = useState('');
-  const [filtered, setFiltered] = useState([]);
 
-  // Convertir los diccionarios a arrays con categoría incluida
-  const playasArray = Object.entries(playas).map(([slug, data]) => ({
-    ...data,
-    slug,
-    categoria: 'playas'
-  }));
+  // ✅ Memoizar todos los destinos una sola vez
+  const allDestinos = useMemo(() => {
+    const playasArray = Object.entries(playas).map(([slug, data]) => ({
+      ...data,
+      slug,
+      categoria: 'playas'
+    }));
 
-  const pueblosMagicosArray = pueblosMagicos.map((p) => ({
-    ...p,
-    categoria: 'pueblosMagicos'
-  }));
+    const pueblosMagicosArray = pueblosMagicos.map((p) => ({
+      ...p,
+      categoria: 'pueblosMagicos'
+    }));
 
-  const pueblosArray = pueblos.map((p) => ({
-    ...p,
-    categoria: 'pueblos'
-  }));
+    const pueblosArray = pueblos.map((p) => ({
+      ...p,
+      categoria: 'pueblos'
+    }));
 
-  const allDestinos = [...playasArray, ...pueblosMagicosArray, ...pueblosArray];
+    return [...playasArray, ...pueblosMagicosArray, ...pueblosArray];
+  }, []);
+
+  // ✅ Filtrar dinámicamente con memo y sin necesidad de un estado extra
+  const filtered = useMemo(() => {
+    if (!inputValue) return [];
+    return allDestinos.filter((l) =>
+      l.nombre.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  }, [inputValue, allDestinos]);
 
   const handleInput = (e) => {
     const valor = e.target.value;
     setInputValue(valor);
-    const resultados = allDestinos.filter((l) =>
-      l.nombre.toLowerCase().includes(valor.toLowerCase())
-    );
-    setFiltered(resultados);
   };
 
   const handleAutoSelect = (lugar) => {
-    // Solo se envía la categoría y el nombre del lugar
     onSelect(lugar.categoria, { nombre: lugar.nombre });
   };
 
   const handleSelect = (categoria) => {
-    // Envía solo la categoría (sin destino específico)
     onSelect(categoria, null);
   };
 
