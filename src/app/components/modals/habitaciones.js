@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { 
   BotonCerrar, 
   BotonVolver, 
@@ -11,6 +11,8 @@ import {
 
 export default function RenderHabitaciones({ datos, onSiguiente, onVolver, onClose }) {
   const [habitacionSeleccionada, setHabitacionSeleccionada] = useState(datos.habitacion);
+  const carruselRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const habitaciones = [
     { 
@@ -72,34 +74,72 @@ export default function RenderHabitaciones({ datos, onSiguiente, onVolver, onClo
     onSiguiente({ habitacion: habitacionSeleccionada });
   };
 
+  const scrollToCard = (index) => {
+    if (carruselRef.current) {
+      const cardWidth = 380; // Ancho de cada card + espacio
+      carruselRef.current.scrollTo({
+        left: index * cardWidth,
+        behavior: 'smooth'
+      });
+      setCurrentIndex(index);
+    }
+  };
+
+  const nextCards = () => {
+    if (currentIndex < habitaciones.length - 1) {
+      scrollToCard(currentIndex + 1);
+    }
+  };
+
+  const prevCards = () => {
+    if (currentIndex > 0) {
+      scrollToCard(currentIndex - 1);
+    }
+  };
+
   return (
-    <div className="relative p-6 w-full max-w-4xl mx-auto">
+    <div className="relative p-4 md:p-6 w-full max-w-6xl mx-auto">
       {/* Encabezado */}
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-[#364153]">Selecciona tu habitación</h2>
-          <p className="text-[#6A7282] text-sm">Elige el tipo de alojamiento para tu estancia</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#364153]">Selecciona tu habitación</h2>
+          <p className="text-[#6A7282] text-sm md:text-base">Elige el tipo de alojamiento para tu estancia</p>
         </div>
         <BotonCerrar onClick={onClose} />
       </div>
 
-      {/* Carrusel de habitaciones */}
+      {/* Contenedor del carrusel */}
       <div className="relative">
-        <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex space-x-4 py-4" style={{ scrollSnapType: 'x mandatory' }}>
+        {/* Botón anterior */}
+        {currentIndex > 0 && (
+          <button 
+            onClick={prevCards}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg border border-gray-200"
+          >
+            <svg className="w-6 h-6 text-[#364153]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
+
+        {/* Carrusel de habitaciones */}
+        <div 
+          ref={carruselRef}
+          className="overflow-hidden"
+        >
+          <div className="flex space-x-6 transition-transform duration-300">
             {habitaciones.map((habitacion) => (
               <div
                 key={habitacion.id}
                 onClick={() => setHabitacionSeleccionada(habitacion.id)}
-                className={`flex-shrink-0 w-80 cursor-pointer rounded-xl border-2 overflow-hidden transition-all ${
+                className={`flex-shrink-0 w-[380px] cursor-pointer rounded-xl border-2 overflow-hidden transition-all ${
                   habitacionSeleccionada === habitacion.id
                     ? 'border-[#7CB936] bg-[#7CB936]/10 shadow-inner'
                     : 'border-[#6A7282]/30 hover:border-[#7CB936]/50 bg-white'
                 }`}
-                style={{ scrollSnapAlign: 'start' }}
               >
                 {/* Imagen */}
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-56 overflow-hidden">
                   <img 
                     src={habitacion.imagen} 
                     alt={habitacion.nombre} 
@@ -111,7 +151,7 @@ export default function RenderHabitaciones({ datos, onSiguiente, onVolver, onClo
                 </div>
 
                 {/* Contenido */}
-                <div className="p-4">
+                <div className="p-5">
                   <div className="flex justify-between items-start">
                     <h3 className="font-bold text-lg text-[#364153]">{habitacion.nombre}</h3>
                     <span className="text-[#7CB936] font-medium">{habitacion.precio}</span>
@@ -161,10 +201,33 @@ export default function RenderHabitaciones({ datos, onSiguiente, onVolver, onClo
             ))}
           </div>
         </div>
+
+        {/* Botón siguiente */}
+        {currentIndex < habitaciones.length - 1 && (
+          <button 
+            onClick={nextCards}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg border border-gray-200"
+          >
+            <svg className="w-6 h-6 text-[#364153]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {/* Indicadores de posición */}
+      <div className="flex justify-center mt-4 space-x-2">
+        {habitaciones.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => scrollToCard(index)}
+            className={`w-3 h-3 rounded-full ${currentIndex === index ? 'bg-[#7CB936]' : 'bg-gray-300'}`}
+          />
+        ))}
       </div>
 
       {/* Botones de navegación */}
-      <ContenedorBotones>
+      <ContenedorBotones className="mt-6">
         <BotonVolver onClick={onVolver} />
         <Espaciador />
         <BotonSiguiente 
