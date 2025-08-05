@@ -4,87 +4,78 @@ import { useState } from 'react';
 import { pueblosMagicos } from '../../data/pueblosMagicos';
 import pueblos from '../../data/pueblos';
 import playas from '../../data/playas';
-import {
-  BotonCerrar,
-  BotonVolver,
-  BotonSiguiente,
-  ContenedorBotones,
-  Espaciador
+import { 
+  BotonCerrar, 
+  BotonVolver, 
+  BotonSiguiente, 
+  ContenedorBotones, 
+  Espaciador 
 } from './botones';
 
-const tituloMap = {
-  pueblos: 'los pueblos',
-  playas: 'playa',
-  pueblosMagicos: 'los pueblos mágicos'
-};
-
 export default function RenderDestino({ datos, onSiguiente, onVolver, onClose }) {
-  const [seleccion, setSeleccion] = useState(null);
-
-  const categoriaActual = datos.categoria;
-  const subcategoriaActual = datos.subCategoria;
-
+  const [seleccion, setSeleccion] = useState(datos.destino);
+  
   const dataMap = {
     pueblosMagicos,
     pueblos,
-    playas
+    playa: playas,
   };
 
-  // Obtener datos según la categoría
-  let datosLista = [];
+  const tituloMap = {
+    pueblosMagicos: 'Pueblos Mágicos',
+    pueblos: 'Pueblos',
+    playa: 'Playas',
+  };
 
-  if (categoriaActual === 'pueblos' && subcategoriaActual) {
-    datosLista = Object.entries(dataMap.pueblos).filter(
-      ([_, data]) => data.categoria === subcategoriaActual
-    );
-  } else {
-    datosLista = Object.entries(dataMap[categoriaActual] || {});
-  }
+  const datosLista = Object.entries(dataMap[datos.categoria] || {});
 
   const toggleSeleccion = (id) => {
-    setSeleccion(id);
+    setSeleccion(prev => prev === id ? null : id);
   };
-   const handleSiguiente = () => {
+
+  const handleSiguiente = () => {
+    if (!seleccion) return;
     
     const destinoSeleccionado = dataMap[datos.categoria][seleccion];
     const nombreDestino = destinoSeleccionado ? destinoSeleccionado.nombre : '';
     
     onSiguiente({ 
       destino: nombreDestino
-  
     });
   };
-  console.log("categoriaActual: ", categoriaActual);
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="relative p-6 w-full max-w-2xl bg-white rounded-lg shadow-lg">
-        {/* Encabezado */}
-        <div className="flex justify-between items-start mb-4">
-          <div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl w-full max-w-3xl p-5 mx-auto">
+        {/* Encabezado CENTRADO */}
+        <div className="flex flex-col items-center mb-4 relative">
+          <div className="text-center">
             <h2 className="text-2xl font-bold text-[#364153]">¿A dónde desea ir?</h2>
             <p className="text-[#6A7282] mt-1 text-sm">
-              Selecciona un destino de {tituloMap[categoriaActual] || 'opciones'}
+              Selecciona un destino de {tituloMap[datos.categoria] || 'opciones'}
             </p>
           </div>
-          <BotonCerrar onClick={onClose} />
+          <div className="absolute right-0 top-0">
+            <BotonCerrar onClick={onClose} />
+          </div>
         </div>
 
-        {/* Contenido principal: lista de destinos */}
-        <div className="grid grid-cols-3 gap-3 max-h-[300px] overflow-y-auto mb-6">
+        {/* Contenido principal */}
+        <div className="grid grid-cols-3 gap-2 max-h-[65vh] overflow-y-auto mb-4">
           {datosLista.map(([id, data]) => (
             <button
               key={id}
               onClick={() => toggleSeleccion(id)}
-              className={`flex flex-col items-center justify-center gap-1 p-3 rounded-xl border-2 min-w-[100px] transition-all cursor-pointer ${
+              className={`flex flex-col items-center justify-center gap-1 p-2 rounded-lg border-2 transition-all cursor-pointer mx-auto w-[90%] ${
                 seleccion === id
                   ? 'border-[#7CB936] bg-[#7CB936]/10 shadow-inner'
                   : 'border-gray-200 hover:border-[#7CB936]/50 bg-white'
               }`}
             >
-              <img
-                src={data.icono}
-                alt={data.nombre}
-                className="w-12 h-12 object-contain"
+              <img 
+                src={data.icono} 
+                alt={data.nombre} 
+                className="w-14 h-14 object-contain" 
               />
               <span className="text-xs font-medium text-[#364153] text-center">
                 {data.nombre}
@@ -92,18 +83,16 @@ export default function RenderDestino({ datos, onSiguiente, onVolver, onClose })
             </button>
           ))}
         </div>
-
-        <Espaciador />
-
+        
         {/* Botones de navegación */}
         <ContenedorBotones>
-        <BotonVolver onClick={onVolver} />
-        <Espaciador />
-        <BotonSiguiente 
-          onClick={handleSiguiente} 
-          disabled={!seleccion} 
-        />
-      </ContenedorBotones>
+          <BotonVolver onClick={onVolver} />
+          <Espaciador />
+          <BotonSiguiente 
+            onClick={handleSiguiente} 
+            disabled={!seleccion} 
+          />
+        </ContenedorBotones>
       </div>
     </div>
   );
