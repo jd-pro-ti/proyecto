@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { BotonCerrar } from './modals/botones';
 import { pueblosMagicos } from '../data/pueblosMagicos';
 import pueblos from '../data/pueblos';
 import playas from '../data/playas';
 
-export default function ModalInicio({ onClose, onSelect  }) {
+const ModalInicio= React.memo(function ModalInicio ({ onClose, onSelect, show }) {
+  if (!show) return null;
   const [inputValue, setInputValue] = useState('');
 
-  // ✅ Memoizar todos los destinos una sola vez
   const allDestinos = useMemo(() => {
     const playasArray = Object.entries(playas).map(([slug, data]) => ({
       ...data,
@@ -30,7 +30,7 @@ export default function ModalInicio({ onClose, onSelect  }) {
     return [...playasArray, ...pueblosMagicosArray, ...pueblosArray];
   }, []);
 
-  // ✅ Filtrar dinámicamente con memo y sin necesidad de un estado extra
+
   const filtered = useMemo(() => {
     if (!inputValue) return [];
     return allDestinos.filter((l) =>
@@ -128,4 +128,6 @@ export default function ModalInicio({ onClose, onSelect  }) {
       </div>
     </div>
   );
-}
+})
+
+export default ModalInicio;

@@ -140,7 +140,7 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
               <div className="flex justify-between items-center mb-2">
                 <button 
                   onClick={() => cambiarMes('prev')}
-                  className="p-1 rounded-full hover:bg-gray-100"
+                  className="p-1 rounded-full hover:bg-gray-100 text-black"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -151,7 +151,7 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
                 </span>
                 <button 
                   onClick={() => cambiarMes('next')}
-                  className="p-1 rounded-full hover:bg-gray-100"
+                  className="p-1 rounded-full hover:bg-gray-100 text-black"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -215,7 +215,7 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
             <div className="grid grid-cols-3 gap-3">
               <div className="flex flex-col">
                 <label className="text-xs text-[#24375e] mb-1">Adultos</label>
-                <div className="flex items-center border rounded-lg overflow-hidden">
+                <div className="flex items-center border-1 border-green-600 rounded-lg overflow-hidden ">
                   <button 
                     onClick={() => actualizarDetalles('adultos', detallesPersonas.adultos - 1)}
                     className="px-2 py-1 text-[#24375e] text-base font-bold"
@@ -235,7 +235,7 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
 
               <div className="flex flex-col">
                 <label className="text-xs text-[#24375e] mb-1">Niños (2-12)</label>
-                <div className="flex items-center border rounded-lg overflow-hidden">
+                <div className="flex items-center border-1 border-green-600 rounded-lg overflow-hidden ">
                   <button 
                     onClick={() => actualizarDetalles('ninos', detallesPersonas.ninos - 1)}
                     className="px-2 py-1 text-[#24375e] text-base font-bold"
@@ -255,7 +255,7 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
 
               <div className="flex flex-col">
                 <label className="text-xs text-[#24375e] mb-1">Bebés (0-2)</label>
-                <div className="flex items-center border rounded-lg overflow-hidden">
+                <div className="flex items-center border-1 border-green-600 rounded-lg overflow-hidden ">
                   <button 
                     onClick={() => actualizarDetalles('bebes', detallesPersonas.bebes - 1)}
                     className="px-2 py-1 text-[#24375e] text-base font-bold"

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { pueblosMagicos } from '../../data/pueblosMagicos';
 import pueblos from '../../data/pueblos';
 import playas from '../../data/playas';
@@ -13,32 +13,44 @@ import {
 } from './botones';
 
 export default function RenderDestino({ datos, onSiguiente, onVolver, onClose }) {
-  const [seleccion, setSeleccion] = useState(datos.destino);
   
+
+  const [seleccion, setSeleccion] = useState(datos.destino);
+
+  const tituloMap = {
+    pueblos: 'los pueblos',
+    playas: 'playa',
+    pueblosMagicos: 'los pueblos mágicos'
+  };
+
+  const categoriaActual = datos.categoria;
+  const subcategoriaActual = datos.subCategoria;
+
   const dataMap = {
     pueblosMagicos,
     pueblos,
-    playa: playas,
+    playas
   };
 
-  const tituloMap = {
-    pueblosMagicos: 'Pueblos Mágicos',
-    pueblos: 'Pueblos',
-    playa: 'Playas',
-  };
-
-  const datosLista = Object.entries(dataMap[datos.categoria] || {});
+  // Obtener datos según la categoría
+  const datosLista = useMemo(() => {
+    if (categoriaActual === 'pueblos' && subcategoriaActual) {
+      return Object.entries(dataMap.pueblos).filter(
+        ([_, data]) => data.categoria === subcategoriaActual
+      );
+    } else {
+      return Object.entries(dataMap[categoriaActual] || {});
+    }
+  }, [categoriaActual, subcategoriaActual]);
 
   const toggleSeleccion = (id) => {
-    setSeleccion(prev => prev === id ? null : id);
+    setSeleccion(id);
   };
 
   const handleSiguiente = () => {
-    if (!seleccion) return;
-    
     const destinoSeleccionado = dataMap[datos.categoria][seleccion];
     const nombreDestino = destinoSeleccionado ? destinoSeleccionado.nombre : '';
-    
+
     onSiguiente({ 
       destino: nombreDestino
     });

@@ -1,4 +1,4 @@
-export default function RenderFinal({ onClose, datos }) {
+export default function RenderFinal({ onClose }) {
   // Puedes usar los datos para mostrar un resumen del viaje si lo deseas
   return (
     <div className="text-center">

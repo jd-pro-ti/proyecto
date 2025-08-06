@@ -5,14 +5,16 @@ import React from 'react';
 export function BotonVolver({ onClick }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className="p-2 text-[#059669] rounded-full hover:bg-gray-100 transition-all 
+      className="flex items-center gap-2 p-2 text-[#059669] rounded-full hover:bg-gray-100 transition-all 
                 duration-300 ease-in-out transform hover:-translate-x-1 active:scale-95"
       aria-label="Volver"
-      >
+    >
       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
       </svg>
+      <span className="font-medium">Volver</span>
     </button>
   );
 }
@@ -20,14 +22,16 @@ export function BotonVolver({ onClick }) {
 export function BotonSiguiente({ onClick, disabled = false }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`p-2 rounded-full transition-all duration-300 ease-in-out 
+      className={`flex items-center gap-2 p-2 rounded-full transition-all duration-300 ease-in-out 
                 ${disabled ? 'text-gray-400 cursor-not-allowed' : 
                   'text-[#059669] hover:bg-green-50 hover:shadow-md transform hover:translate-x-1 active:scale-95'}
                 relative overflow-hidden group`}
       aria-label="Siguiente"
     >
+      <span className="font-medium">Siguiente</span>
       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
       </svg>

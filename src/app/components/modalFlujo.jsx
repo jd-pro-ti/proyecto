@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import RenderDestino from './modals/destino';
 import RenderHospedaje from './modals/hopedajeCalendario';
 import RenderHoteles from './modals/hoteles';
 import RenderHabitaciones from './modals/habitaciones';
 import RenderEventos from './modals/eventos';
 import RenderFinal from './modals/despedida';
-import ModalPueblo from './modalPueblo';
 
 
-export default function ModalFlujo({ show, onClose, categoria, onBack, subCategoria, destino }) {
+
+const ModalFlujo = React.memo(function ModalFlujo({ show, onClose, categoria, onBack, subCategoria, destino }) {
+  if (!show) return null;
   const [paso, setPaso] = useState(1);
   const [saltadoHospedaje, setSaltadoHospedaje] = useState(false);
   const [saltadoHoteles, setSaltadoHoteles] = useState(false);
@@ -31,7 +32,6 @@ export default function ModalFlujo({ show, onClose, categoria, onBack, subCatego
     destinoInput: destino || null,
   });
 
-  // Saltar al paso 2 si hay destinoInput al inicio (solo una vez)
   useEffect(() => {
     if (!yaSaltado.current && datosCompartidos.destinoInput) {
       yaSaltado.current = true; 
@@ -45,10 +45,9 @@ export default function ModalFlujo({ show, onClose, categoria, onBack, subCatego
       setPaso(2);
     }
   }, [datosCompartidos.destinoInput]);
+  
 
-  if (!show) return null;
-
-  const handleSiguiente = (nuevosDatos = {}) => {
+  const handleSiguiente = useCallback((nuevosDatos = {}) => {
     setDatosCompartidos(prev => {
       const nuevos = {
         ...prev,
@@ -81,12 +80,12 @@ export default function ModalFlujo({ show, onClose, categoria, onBack, subCatego
       setPaso(siguientePaso);
       return nuevos;
     });
-  };
+  } ,[paso]);
 
-  const handleVolver = () => {
+  const handleVolver = useCallback(() => {
   if (paso === 2 && yaSaltado.current) {
     onBack();
-    yaSaltado.current = false; // Permitir volver a saltar si el modal se abre otra vez
+    yaSaltado.current = false; 
   } else if (paso === 5) {
     if (saltadoHoteles) {
       setPaso(3);
@@ -103,22 +102,47 @@ export default function ModalFlujo({ show, onClose, categoria, onBack, subCatego
   else {
     onBack();
   }
-};
+},[paso, onBack, saltadoHospedaje, saltadoHoteles]);
 
   const renderPaso = () => {
     switch (paso) {
       case 1:
-        return <RenderDestino datos={datosCompartidos} onSiguiente={handleSiguiente} onVolver={handleVolver} onClose={onClose} />;
+        return <RenderDestino 
+        datos={datosCompartidos} 
+        onSiguiente={handleSiguiente} 
+        onVolver={handleVolver} 
+        onClose={onClose} 
+        />;
       case 2:
-        return <RenderHospedaje datos={datosCompartidos} onSiguiente={handleSiguiente} onVolver={handleVolver} onClose={onClose} />;
+        return <RenderHospedaje 
+        datos={datosCompartidos} 
+        onSiguiente={handleSiguiente} 
+        onVolver={handleVolver} 
+        onClose={onClose} 
+        />;
       case 3:
-        return <RenderHoteles datos={datosCompartidos} onSiguiente={handleSiguiente} onVolver={handleVolver} onClose={onClose} />;
+        return <RenderHoteles 
+        datos={datosCompartidos} 
+        onSiguiente={handleSiguiente} 
+        onVolver={handleVolver} 
+        onClose={onClose} 
+        />;
       case 4:
-        return <RenderHabitaciones datos={datosCompartidos} onSiguiente={handleSiguiente} onVolver={handleVolver} onClose={onClose} />;
+        return <RenderHabitaciones 
+        datos={datosCompartidos} 
+        onSiguiente={handleSiguiente} 
+        onVolver={handleVolver} 
+        onClose={onClose} />;
       case 5:
-        return <RenderEventos datos={datosCompartidos} onSiguiente={handleSiguiente} onVolver={handleVolver} onClose={onClose} />;
+        return <RenderEventos 
+        datos={datosCompartidos} 
+        onSiguiente={handleSiguiente} 
+        onVolver={handleVolver} 
+        onClose={onClose} />;
       case 6:
-        return <RenderFinal onClose={onClose} datos={datosCompartidos} />;
+        return <RenderFinal 
+        onClose={onClose} 
+        datos={datosCompartidos} />;
       default:
         return null;
     }
@@ -131,4 +155,6 @@ export default function ModalFlujo({ show, onClose, categoria, onBack, subCatego
       </div>
     </div>
   );
-}
+})
+
+export default ModalFlujo;

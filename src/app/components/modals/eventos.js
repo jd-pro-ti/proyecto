@@ -11,8 +11,6 @@ import {
 } from './botones';
 
 export default function RenderEventos({ datos, onSiguiente, onVolver, onClose }) {
-  const [eventoSeleccionado, setEventoSeleccionado] = useState(datos.evento);
-  
   const eventosFiltrados = datos.destino 
     ? eventos.filter(evento => {
         const lugarEvento = evento.lugar.split(',')[0].trim().toLowerCase();
@@ -22,7 +20,7 @@ export default function RenderEventos({ datos, onSiguiente, onVolver, onClose })
     : [];
 
   const handleSiguiente = () => {
-    onSiguiente({ evento: eventoSeleccionado });
+    onSiguiente({ evento: null }); // Enviamos null ya que no hay selección
   };
 
   return (
@@ -33,7 +31,7 @@ export default function RenderEventos({ datos, onSiguiente, onVolver, onClose })
           <h2 className="text-xl sm:text-2xl font-bold text-[#364153]">Eventos en {datos.destino}</h2>
           <p className="text-gray-500 mt-1 text-xs sm:text-sm">
             {eventosFiltrados.length > 0 
-              ? "Selecciona un evento para agregarlo a tu itinerario" 
+              ? "Eventos disponibles en este destino" 
               : "No hay eventos registrados para este destino"}
           </p>
         </div>
@@ -49,12 +47,7 @@ export default function RenderEventos({ datos, onSiguiente, onVolver, onClose })
             {eventosFiltrados.map((evento) => (
               <div
                 key={evento.slug}
-                onClick={() => setEventoSeleccionado(evento.slug)}
-                className={`flex-shrink-0 w-64 sm:w-72 md:w-80 cursor-pointer rounded-xl border-2 overflow-hidden transition-all ${
-                  eventoSeleccionado === evento.slug
-                    ? 'border-[#7CB936] bg-green-50 shadow-inner'
-                    : 'border-gray-200 hover:border-[#059669] bg-white'
-                }`}
+                className="flex-shrink-0 w-64 sm:w-72 md:w-80 rounded-xl border-2 overflow-hidden border-gray-200 bg-white"
               >
                 <div className="relative">
                   <img 
