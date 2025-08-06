@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import ModalInicio from './components/modalInicio';
 import ModalFlujo from './components/modalFlujo';
 import ModalPueblo from './components/modalPueblo';
@@ -14,48 +14,48 @@ export default function Home() {
   const [destino, setdestino] = useState(null);
   const [seleccionFinal, setSeleccionFinal] = useState(null);
 
-  const handleSelect = (categoriaSeleccionada, lugar) => {
-    setCategoria(categoriaSeleccionada);
-    setdestino(lugar); // Guardar el destino seleccionado (puede ser null si fue clic en botón)
-    setShowInicio(false);
-    if (categoriaSeleccionada === 'pueblos' && !lugar) {
-      setShowPueblo(true);
-    } else {
-      setShowFlujo(true);
-    }
-  };
+const handleSelect = useCallback((categoriaSeleccionada, lugar) => {
+  setCategoria(categoriaSeleccionada);
+  setdestino(lugar);
+  setShowInicio(false);
 
-  const handleCerrarFlujo = () => {
-    setShowFlujo(false);
-    setShowPueblo(false);
-    setCategoria(null);
-    setSeleccionFinal(null);
-    setSubcategoria(null);
-    setdestino(null);
-  };
+  if (categoriaSeleccionada === 'pueblos' && !lugar) {
+    setShowPueblo(true);
+  } else {
+    setShowFlujo(true);
+  }
+}, []);
 
-  const handleVolver = () => {
-    setShowFlujo(false);
+const handleCerrarFlujo = useCallback(() => {
+  setShowFlujo(false);
+  setShowPueblo(false);
+  setCategoria(null);
+  setSeleccionFinal(null);
+  setSubcategoria(null);
+  setdestino(null);
+}, []);
+
+const handleVolver = useCallback(() => {
+ setShowFlujo(false);
     setShowPueblo(false);
     setShowInicio(true);
-  };
+}, []);
 
-  const handleNext = ({ subcategoria }) => {
-    setSubcategoria(subcategoria);
+const handleNext = useCallback(({ subcategoria }) => {
+  setSubcategoria(subcategoria);
 
-    if (subcategoria === 'pueblos magicos') {
-      setCategoria('pueblosMagicos');
-    } else if (categoria === 'playas') {
-      setCategoria('playas');
-    } else {
-      setCategoria('pueblos');
-    }
+  if (subcategoria === 'pueblos magicos') {
+    setCategoria('pueblosMagicos');
+  } else if (categoria === 'playas') {
+    setCategoria('playas');
+  } else {
+    setCategoria('pueblos');
+  }
 
-    setSeleccionFinal(subcategoria);
-    setShowPueblo(false);
-    setShowFlujo(true);
-  };
-
+  setSeleccionFinal(subcategoria);
+  setShowPueblo(false);
+  setShowFlujo(true);
+}, [categoria]);
   return (
     <main className="min-h-screen flex items-center justify-center bg-black">
       <button
