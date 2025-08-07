@@ -73,7 +73,7 @@ export default function RenderHabitaciones({ datos, onSiguiente, onVolver, onClo
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0)] backdrop-blur-sm transition-opacity duration-500">
       {/* Contenedor principal responsivo */}
       <div className="bg-white w-full h-full sm:w-[90vw] sm:h-[90vh] md:w-[78vw] md:h-[85vh] flex flex-col rounded-lg overflow-hidden">
         {/* Contenido scrollable */}

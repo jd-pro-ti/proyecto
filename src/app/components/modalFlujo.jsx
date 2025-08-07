@@ -149,7 +149,7 @@ const ModalFlujo = React.memo(function ModalFlujo({ show, onClose, categoria, on
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300"> 
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.42)] backdrop-blur-sm transition-opacity duration-300">
       <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300">
         {renderPaso()}
       </div>
