@@ -61,7 +61,7 @@ export default function Experiencia() {
     <>
       <button
         onClick={() => setShowInicio(true)}
-        className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full transition duration-300"
+        className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 cursor-pointer "
       >
         Personaliza tu experiencia
       </button>
