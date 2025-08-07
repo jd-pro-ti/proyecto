@@ -101,7 +101,7 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
         <div className="flex flex-col items-center mb-3">  {/* Centrado con flex-col y items-center */}
           <div className="text-center">  {/* Texto centrado */}
             <h2 className="text-xl font-bold text-[#364153] mb-1">¿Te quieres hospedar?</h2>
-            <p className="text-gray-500 text-xs">Recibe recomendaciones personalizadas</p>
+            <p className="text-[#6A7282] mt-1 text-sm">Recibe recomendaciones personalizadas</p>
           </div>
           <div className="absolute top-4 right-4">  {/* Botón de cerrar en esquina */}
             <BotonCerrar onClick={onClose} />

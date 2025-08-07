@@ -83,9 +83,11 @@ const ModalInicio= React.memo(function ModalInicio ({ onClose, onSelect, show })
                 className="p-2 cursor-pointer hover:bg-[#6A7282]/20 rounded flex gap-2 items-center"
                 onClick={() => handleAutoSelect(lugar)}
               >
-                {lugar.icono && (
+
+                {/* {lugar.icono && (
                   <img src={lugar.icono} alt={lugar.nombre} className="w-6 h-6" />
-                )}
+                )} */}
+                
                 <div>
                   <div className="font-medium">{lugar.nombre}</div>
                   <div className="text-sm text-gray-500 capitalize">{lugar.categoria}</div>

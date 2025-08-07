@@ -38,7 +38,7 @@ export default function RenderHoteles({ datos, onSiguiente, onVolver, onClose })
       <div className="relative mb-4 md:mb-6 text-center">
         <div className="px-10 sm:px-0"> {/* Padding para evitar superposición con botón */}
           <h2 className="text-xl sm:text-2xl font-bold text-[#364153]">Hoteles en {datos.destino}</h2>
-          <p className="text-gray-500 mt-1 text-xs sm:text-sm">Elige tu alojamiento ideal</p>
+          <p className="text-[#6A7282] mt-1 text-sm">Elige tu alojamiento ideal</p>
         </div>
         <div className="absolute top-0 right-0">
           <BotonCerrar onClick={onClose} />
