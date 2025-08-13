@@ -10,7 +10,7 @@ export function useFlujo({ show, categoria, subCategoria, destino, onBack }) {
     categoria: categoria?.tipo || categoria || null,
     destino: categoria?.destino || null,
     tipoViaje: null,
-    detallesPersonas: categoria?.detallesPersonas || { adultos: 1, ninos: 0, bebes: 0 },
+    detallesPersonas: categoria?.detallesPersonas || null,
     necesitaHospedaje: null,
     fechas: { inicio: null, fin: null },
     hotel: null,

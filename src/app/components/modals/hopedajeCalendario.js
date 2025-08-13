@@ -68,7 +68,8 @@ export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose 
     setRespuesta(resp);
     setMostrarCalendario(resp);
     if (!resp) {
-      setFechas({ inicio: null, fin: null });
+      setFechas({ inicio: null, fin: null});
+      setDetallesPersonas(null)
     }
   };
 
