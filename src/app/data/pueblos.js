@@ -98,3 +98,4 @@ const pueblos = [
     categoria: 'gastronomia'
   }
 ];
+export default pueblos;

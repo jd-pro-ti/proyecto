@@ -56,7 +56,7 @@ export const eventos = [
     fecha: "15",
     mes: "ABR",
     titulo: "Festival del Lago",
-    lugar: "Pátzcuaro, Mich",
+    lugar: "Patzcuaro, Mich",
     precio: "$270.00 MXN",
     horario: "11:00 AM - 8:00 PM",
     tipo: "Cultural / Turístico",

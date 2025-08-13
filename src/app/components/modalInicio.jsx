@@ -1,115 +1,130 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { BotonCerrar } from './modals/botones';
+import { pueblosMagicos } from '../data/pueblosMagicos';
+import pueblos from '../data/pueblos';
+import playas from '../data/playas';
 
-export default function ModalInicio({ onClose, onSelect }) {
+const ModalInicio= React.memo(function ModalInicio ({ onClose, onSelect, show }) {
+  if (!show) return null;
   const [inputValue, setInputValue] = useState('');
-  const [filtered, setFiltered] = useState([]);
 
-  const destinos = {
-    playa: ['Lazaro Cardenas', 'Caleta de Campos', 'Maruata'],
-    pueblos_magicos: ['Patzcuaro', 'Tlalpujahua', 'Cuitzeo'],
-    pueblos: ['Charo', 'Tacambaro', 'Turicato', 'Zinapecuaro'],
-  };
+  const allDestinos = useMemo(() => {
+    const playasArray = Object.entries(playas).map(([slug, data]) => ({
+      ...data,
+      slug,
+      categoria: 'playas'
+    }));
 
-  const allLugares = Object.entries(destinos).flatMap(([tipo, lugares]) =>
-    lugares.map((lugar) => ({ nombre: lugar, tipo }))
-  );
+    const pueblosMagicosArray = pueblosMagicos.map((p) => ({
+      ...p,
+      categoria: 'pueblosMagicos'
+    }));
+
+    const pueblosArray = pueblos.map((p) => ({
+      ...p,
+      categoria: 'pueblos'
+    }));
+
+    return [...playasArray, ...pueblosMagicosArray, ...pueblosArray];
+  }, []);
+
+
+  const filtered = useMemo(() => {
+    if (!inputValue) return [];
+    return allDestinos.filter((l) =>
+      l.nombre.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  }, [inputValue, allDestinos]);
 
   const handleInput = (e) => {
     const valor = e.target.value;
     setInputValue(valor);
-    setFiltered(
-      allLugares.filter((l) =>
-        l.nombre.toLowerCase().includes(valor.toLowerCase())
-      )
-    );
   };
 
   const handleAutoSelect = (lugar) => {
-    const tipoMap = {
-      playa: 'playa',
-      pueblos: 'pueblos', // Cambiado de 'pueblosMagicos' a 'pueblos'
-      pueblos_magicos: 'pueblosMagicos',
-    };
-
-    const tipo = tipoMap[lugar.tipo] || 'inicio';
-    onSelect(tipo, 1); // Cambiado a paso 1 para consistencia
+    onSelect(lugar.categoria, { nombre: lugar.nombre });
   };
 
-  const handleSelect = (opcion) => {
-    // Asegúrate de que las opciones coincidan con lo que esperas en el componente padre
-    onSelect(opcion, 1);
+  const handleSelect = (categoria) => {
+    onSelect(categoria, null);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300"> 
-      <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-lg shadow-xl transform transition-all duration-300"> 
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.42)] backdrop-blur-sm transition-opacity duration-500">
+      <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-2xl shadow-xl transform transition-all duration-300 mx-4">
+        {/* Botón de cerrar */}
+        <div className="absolute top-4 right-4">
+          <BotonCerrar onClick={onClose} />
+        </div>
+
+        <div className="text-center mb-6 md:mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-[#1C3458]">
             ¿Cuál es tu próximo destino?
           </h2>
         </div>
 
+        {/* Input de búsqueda */}
         <input
           type="text"
           placeholder="Busca tu destino..."
           value={inputValue}
           onChange={handleInput}
-          className="w-full border text-black border-gray-300 rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="w-full border-2 text-base md:text-lg text-black border-[#6A7282] rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-[#6A7282]"
         />
 
+        {/* Resultados */}
         {filtered.length > 0 && (
-          <div className="bg-gray-100 rounded-md p-2 mb-4 max-h-32 overflow-y-auto text-black">
+          <div className="bg-[#6A7282]/10 rounded-md p-2 mb-4 max-h-48 overflow-y-auto text-black">
             {filtered.map((lugar, idx) => (
               <div
                 key={idx}
-                className="p-2 cursor-pointer hover:bg-gray-200 rounded"
+                className="p-2 cursor-pointer hover:bg-[#6A7282]/20 rounded flex gap-2 items-center"
                 onClick={() => handleAutoSelect(lugar)}
               >
-                {lugar.nombre}
+                <div>
+                  <div className="font-medium">{lugar.nombre}</div>
+                  <div className="text-sm text-gray-500 capitalize">{lugar.categoria}</div>
+                </div>
               </div>
             ))}
           </div>
         )}
 
-        <p className="text-center text-gray-600 mb-4">
+        <p className="text-center text-lg md:text-xl text-[#6A7282] mb-4 md:mb-6">
           O descubre una experiencia personalizada para ti
         </p>
 
-        <div className="flex justify-between gap-2">
+        {/* Botones de categorías */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 lg:gap-6 px-4">
           <button
             onClick={() => handleSelect('pueblosMagicos')}
-            className="flex-1 flex flex-col items-center gap-1 bg-white hover:bg-amber-50 border border-amber-100 rounded-xl p-3 transition-all hover:shadow-md cursor-pointer"
+            className="flex flex-col items-center gap-2 bg-white hover:bg-amber-50 border-2 border-amber-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
           >
-            <img src="/imagenes/puebloMa.svg" alt="Pueblos mágicos" className="w-20 h-20" />
-            <span className="text-sm font-medium text-gray-700">Pueblos Mágicos</span>
+            <img src="/imagenes/puebloMa.svg" alt="Pueblos mágicos" className="w-16 h-16" />
+            <span className="text-base font-medium text-[#6A7282]">Pueblos Mágicos</span>
           </button>
 
           <button
-            onClick={() => handleSelect('playa')}
-            className="flex-1 flex flex-col items-center gap-1 bg-white hover:bg-blue-50 border border-blue-100 rounded-xl p-3 transition-all hover:shadow-md cursor-pointer"
+            onClick={() => handleSelect('playas')}
+            className="flex flex-col items-center gap-2 bg-white hover:bg-blue-50 border-2 border-blue-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
           >
-            <img src="/imagenes/playas.svg" alt="Playas" className="w-20 h-20" />
-            <span className="text-sm font-medium text-gray-700">Playas</span>
+            <img src="/imagenes/playas.svg" alt="Playas" className="w-16 h-16" />
+            <span className="text-base font-medium text-[#6A7282]">Playas</span>
           </button>
 
           <button
             onClick={() => handleSelect('pueblos')}
-            className="flex-1 flex flex-col items-center gap-1 bg-white hover:bg-purple-50 border border-purple-100 rounded-xl p-3 transition-all hover:shadow-md cursor-pointer"
+            className="flex flex-col items-center gap-2 bg-white hover:bg-purple-50 border-2 border-purple-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
           >
-            <img src="/imagenes/pueblo.svg" alt="Pueblos" className="w-20 h-20" />
-            <span className="text-sm font-medium text-gray-700">Pueblos</span>
+            <img src="/imagenes/pueblo.svg" alt="Pueblos" className="w-16 h-16" />
+            <span className="text-base font-medium text-[#6A7282]">Pueblos</span>
           </button>
         </div>
-
-        <button
-          onClick={onClose}
-          className="mt-6 mx-auto px-4 py-2 text-gray-500 hover:text-gray-700 cursor-pointer transition font-medium text-sm"
-        >
-          Cerrar
-        </button>
       </div>
     </div>
   );
-}
+})
+
+export default ModalInicio;
