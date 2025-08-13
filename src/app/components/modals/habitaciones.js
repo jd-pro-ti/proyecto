@@ -84,7 +84,6 @@ export default function RenderHabitaciones({ datos, onSiguiente, onVolver, onClo
           <BotonCerrar onClick={onClose} className="text-sm sm:text-base" />
         </div>
 
-        {/* Contenido principal */}
         <div className="flex-1 overflow-y-auto p-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2">
             {habitaciones.map((habitacion) => (
@@ -166,7 +165,7 @@ export default function RenderHabitaciones({ datos, onSiguiente, onVolver, onClo
           </div>
         </div>
 
-        {/* Footer con botones */}
+
         <div className="sticky bottom-0 bg-white border-t border-gray-200 p-3 sm:p-4">
           <ContenedorBotones>
             <BotonVolver onClick={onVolver} className="text-sm sm:text-base" />

@@ -1,5 +1,32 @@
-export default function RenderFinal({ onClose }) {
-  // Puedes usar los datos para mostrar un resumen del viaje si lo deseas
+export default function RenderFinal({ onClose, datos }) {
+  const {
+    destino,
+    categoria,
+    hotel,
+    habitacion,
+    detallesPersonas,
+    fechas
+  } = datos || {};
+
+  const formatearFecha = (fecha) => {
+    console.log(fecha);
+    if (!fecha) return "";
+    return new Date(fecha).toLocaleDateString("es-MX", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  let textoFechas = "";
+  if (fechas) {
+    if (typeof fechas === "object" && fechas.inicio && fechas.fin) {
+      textoFechas = `${formatearFecha(fechas.inicio)} al ${formatearFecha(fechas.fin)}`;
+    } else {
+      textoFechas = fechas; 
+    }
+  }
+
   return (
     <div className="text-center">
       <div className="relative text-center mb-8">
@@ -13,7 +40,40 @@ export default function RenderFinal({ onClose }) {
         <p className="text-gray-700 text-lg leading-relaxed">
           Ha sido un placer mostrarte la magia y tradición de nuestros pueblos.
         </p>
-        
+
+        <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-left space-y-2">
+          {destino && (
+            <p className="text-gray-800">
+              <strong>Destino:</strong> {destino}
+            </p>
+          )}
+          {categoria && (
+            <p className="text-gray-800">
+              <strong>Categoría:</strong> {categoria}
+            </p>
+          )}
+          {textoFechas && (
+            <p className="text-gray-800">
+              <strong>Fechas:</strong> {textoFechas}
+            </p>
+          )}
+          {hotel && (
+            <p className="text-gray-800">
+              <strong>Hotel:</strong> {hotel}
+            </p>
+          )}
+          {habitacion && (
+            <p className="text-gray-800">
+              <strong>Habitación:</strong> {habitacion}
+            </p>
+          )}
+          {detallesPersonas && (
+            <p className="text-gray-800">
+              <strong>Personas:</strong> {detallesPersonas.adultos} adultos, {detallesPersonas.ninos} niños, {detallesPersonas.bebes} bebés
+            </p>
+          )}
+        </div>
+
         <div className="inline-flex items-center bg-green-50/80 border border-green-100 rounded-full px-4 py-2">
           <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

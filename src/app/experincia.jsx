@@ -1,61 +1,24 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import ModalInicio from './components/modalInicio';
 import ModalFlujo from './components/modalFlujo';
 import ModalPueblo from './components/modalPueblo';
+import { useExperiencia } from './components/hooks/useExperiencia';
 
 export default function Experiencia() {
-  const [showInicio, setShowInicio] = useState(false);
-  const [showFlujo, setShowFlujo] = useState(false);
-  const [showPueblo, setShowPueblo] = useState(false);
-  const [categoria, setCategoria] = useState(null);
-  const [subcategoria, setSubcategoria] = useState(null);
-  const [destino, setdestino] = useState(null);
-  const [seleccionFinal, setSeleccionFinal] = useState(null);
-
-  const handleSelect = useCallback((categoriaSeleccionada, lugar) => {
-    setCategoria(categoriaSeleccionada);
-    setdestino(lugar);
-    setShowInicio(false);
-
-    if (categoriaSeleccionada === 'pueblos' && !lugar) {
-      setShowPueblo(true);
-    } else {
-      setShowFlujo(true);
-    }
-  }, []);
-
-  const handleCerrarFlujo = useCallback(() => {
-    setShowFlujo(false);
-    setShowPueblo(false);
-    setCategoria(null);
-    setSeleccionFinal(null);
-    setSubcategoria(null);
-    setdestino(null);
-  }, []);
-
-  const handleVolver = useCallback(() => {
-    setShowFlujo(false);
-    setShowPueblo(false);
-    setShowInicio(true);
-  }, []);
-
-  const handleNext = useCallback(({ subcategoria }) => {
-    setSubcategoria(subcategoria);
-
-    if (subcategoria === 'pueblos magicos') {
-      setCategoria('pueblosMagicos');
-    } else if (categoria === 'playas') {
-      setCategoria('playas');
-    } else {
-      setCategoria('pueblos');
-    }
-
-    setSeleccionFinal(subcategoria);
-    setShowPueblo(false);
-    setShowFlujo(true);
-  }, [categoria]);
+  const {
+    showInicio,
+    showFlujo,
+    showPueblo,
+    categoria,
+    subcategoria,
+    destino,
+    setShowInicio,
+    handleSelect,
+    handleCerrarFlujo,
+    handleVolver,
+    handleNext
+  } = useExperiencia();
 
   return (
     <>

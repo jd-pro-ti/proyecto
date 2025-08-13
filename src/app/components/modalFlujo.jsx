@@ -1,110 +1,23 @@
-'use client';
+import { useFlujo } from "./hooks/useFlujo";
+import RenderDestino from "./modals/destino";
+import RenderHospedaje from "./modals/hopedajeCalendario";
+import RenderHoteles from "./modals/hoteles";
+import RenderHabitaciones from "./modals/habitaciones";
+import RenderEventos from "./modals/eventos";
+import RenderFinal from "./modals/despedida";
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import RenderDestino from './modals/destino';
-import RenderHospedaje from './modals/hopedajeCalendario';
-import RenderHoteles from './modals/hoteles';
-import RenderHabitaciones from './modals/habitaciones';
-import RenderEventos from './modals/eventos';
-import RenderFinal from './modals/despedida';
-
-
-
-const ModalFlujo = React.memo(function ModalFlujo({ show, onClose, categoria, onBack, subCategoria, destino }) {
+export default function ModalFlujo({ show, onClose, categoria, onBack, subCategoria, destino }) {
   if (!show) return null;
-  const [paso, setPaso] = useState(1);
-  const [saltadoHospedaje, setSaltadoHospedaje] = useState(false);
-  const [saltadoHoteles, setSaltadoHoteles] = useState(false);
-  const yaSaltado = useRef(false);
 
-  const [datosCompartidos, setDatosCompartidos] = useState({
-    categoria: categoria?.tipo || categoria || null,
-    destino: categoria?.destino || null,
-    tipoViaje: null,
-    detallesPersonas: categoria?.detallesPersonas || { adultos: 1, ninos: 0, bebes: 0 },
-    necesitaHospedaje: null,
-    fechas: { inicio: null, fin: null },
-    hotel: null,
-    habitacion: null,
-    evento: null,
-    seleccion: null,
-    subCategoria: subCategoria || null,
-    destinoInput: destino || null,
+  const { paso, datosCompartidos, handleSiguiente, handleVolver } = useFlujo({
+    show,
+    categoria,
+    subCategoria,
+    destino,
+    onBack
   });
 
-  useEffect(() => {
-    if (!yaSaltado.current && datosCompartidos.destinoInput) {
-      yaSaltado.current = true; 
-
-      setDatosCompartidos(prev => ({
-        ...prev,
-        destino: prev.destinoInput.nombre || prev.destinoInput,
-        categoria: prev.destinoInput.categoria || prev.categoria,
-      }));
-
-      setPaso(2);
-    }
-  }, [datosCompartidos.destinoInput]);
-  
-
-  const handleSiguiente = useCallback((nuevosDatos = {}) => {
-    setDatosCompartidos(prev => {
-      const nuevos = {
-        ...prev,
-        ...nuevosDatos,
-      };
-
-      if (nuevos.destino && nuevos.categoria) {
-        nuevos.destinoInput = {
-          nombre: nuevos.destino?.nombre || nuevos.destino,
-          categoria: nuevos.categoria,
-        };
-      }
-
-      let siguientePaso = paso + 1;
-
-      if (paso === 2 && nuevos.necesitaHospedaje === false) {
-        siguientePaso = 5;
-        setSaltadoHospedaje(true);
-      } else {
-        setSaltadoHospedaje(false);
-      }
-
-      if (paso === 3 && nuevos.sinHoteles) {
-        siguientePaso = 5;
-        setSaltadoHoteles(true);
-      } else {
-        setSaltadoHoteles(false);
-      }
-
-      setPaso(siguientePaso);
-      return nuevos;
-    });
-  } ,[paso]);
-
-  const handleVolver = useCallback(() => {
-  if (paso === 2 && yaSaltado.current) {
-    onBack();
-    yaSaltado.current = false; 
-  } else if (paso === 5) {
-    if (saltadoHoteles) {
-      setPaso(3);
-    } else if (saltadoHospedaje) {
-      setPaso(2);
-    } else {
-      setPaso(4);
-    }
-  } else if (paso === 4 && saltadoHospedaje) {
-    setPaso(2);
-  } else if (paso > 1) {
-    setPaso(p => p - 1);
-  } 
-  else {
-    onBack();
-  }
-},[paso, onBack, saltadoHospedaje, saltadoHoteles]);
-
-  const renderPaso = () => {
+    const renderPaso = () => {
     switch (paso) {
       case 1:
         return <RenderDestino 
@@ -155,6 +68,4 @@ const ModalFlujo = React.memo(function ModalFlujo({ show, onClose, categoria, on
       </div>
     </div>
   );
-})
-
-export default ModalFlujo;
+}
