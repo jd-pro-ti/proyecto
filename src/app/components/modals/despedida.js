@@ -1,3 +1,6 @@
+import { supabase } from '../../../../config';
+import React from 'react';
+
 export default function RenderFinal({ onClose, datos }) {
   const {
     destino,
@@ -26,6 +29,34 @@ export default function RenderFinal({ onClose, datos }) {
       textoFechas = fechas; 
     }
   }
+ const guardarExperiencia = async () => {
+  if (!hotel) {
+    console.log("No se guardó la experiencia porque el hotel es null o vacío.");
+    onClose(); 
+    return; 
+  }
+
+  const { error } = await supabase
+    .from('experiencia')
+    .insert([{
+      destino,
+      categoria,
+      hotel,
+      habitacion,
+      adultos: detallesPersonas?.adultos || 0,
+      ninos: detallesPersonas?.ninos || 0,
+      bebes: detallesPersonas?.bebes || 0,
+      fecha_inicio: fechas?.inicio || null,
+      fecha_fin: fechas?.fin || null
+    }]);
+
+  if (error) {
+    console.error("Error guardando experiencia:", error);
+  } else {
+    console.log("Experiencia guardada correctamente");
+    onClose();
+  }
+};
 
   return (
     <div className="text-center">
@@ -97,7 +128,7 @@ export default function RenderFinal({ onClose, datos }) {
 
       <div className="flex justify-center">
         <button
-          onClick={onClose}
+          onClick={(guardarExperiencia)}
           className="relative overflow-hidden px-8 py-3 rounded-full font-semibold bg-gradient-to-r from-green-500 cursor-pointer to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
         >
           <span className="relative z-10">Salir</span>
