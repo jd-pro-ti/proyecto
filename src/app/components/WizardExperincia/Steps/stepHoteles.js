@@ -1,16 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { alojamientos } from '../../data/alojamientos';
+import { alojamientos } from '../../../data/alojamientos';
 import { 
   BotonCerrar, 
   BotonVolver, 
   BotonSiguiente, 
   ContenedorBotones, 
   Espaciador 
-} from '../WizardExperincia/Steps/botones';
+} from './botones';
 
-export default function RenderHoteles({ datos, onSiguiente, onVolver, onClose }) {
+export default function StepHoteles({ datos, onSiguiente, onVolver, onClose }) {
   const [hotelSeleccionado, setHotelSeleccionado] = useState(datos.hotel);
   
   const hotelesFiltrados = datos.destino 

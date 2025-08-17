@@ -1,14 +1,14 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { eventos } from '../../data/eventos';
+import { eventos } from '../../../data/eventos';
 import {
   BotonVolver,
   BotonSiguiente,
   ContenedorBotones,
   Espaciador,
   BotonCerrar
-} from '../WizardExperincia/Steps/botones';
+} from './botones';
 
 export default function RenderEventos({ datos, onSiguiente, onVolver, onClose }) {
   const eventosFiltrados = datos.destino

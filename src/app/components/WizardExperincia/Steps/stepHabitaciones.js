@@ -7,9 +7,9 @@ import {
   BotonSiguiente,
   ContenedorBotones,
   Espaciador
-} from '../WizardExperincia/Steps/botones';
+} from './botones';
 
-export default function RenderHabitaciones({ datos, onSiguiente, onVolver, onClose }) {
+export default function StepHabitaciones({ datos, onSiguiente, onVolver, onClose }) {
   const [habitacionSeleccionada, setHabitacionSeleccionada] = useState(datos.habitacion);
 
   const habitaciones = [

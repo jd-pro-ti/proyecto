@@ -9,9 +9,9 @@ import {
   BotonSiguiente, 
   ContenedorBotones, 
   Espaciador 
-} from '../WizardExperincia/Steps/botones';
+} from './botones';
 
-export default function RenderHospedaje({ datos, onSiguiente, onVolver, onClose }) {
+export default function StepHospedaje({ datos, onSiguiente, onVolver, onClose }) {
   const [respuesta, setRespuesta] = useState(datos.necesitaHospedaje);
   const [mostrarCalendario, setMostrarCalendario] = useState(false);
   const [fechas, setFechas] = useState(datos.fechas || { inicio: null, fin: null });

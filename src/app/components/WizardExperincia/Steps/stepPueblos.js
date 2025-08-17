@@ -6,9 +6,9 @@ import {
   BotonSiguiente, 
   ContenedorBotones, 
   Espaciador 
-} from './WizardExperincia/Steps/botones';
+} from './botones';
 
-const ModalPueblo = React.memo(function ModalPueblo({ show, onClose, onBack, onNext }) {
+const stepPueblo = React.memo(function ModalPueblo({ show, onClose, onBack, onNext }) {
   if (!show) return null;
   const opciones = [
     { id: 'coloniales', label: 'Coloniales', icon: '/imagenes/pueblo/pueblo1.svg' },
@@ -96,4 +96,4 @@ const ModalPueblo = React.memo(function ModalPueblo({ show, onClose, onBack, onN
   );
 });
 
-export default ModalPueblo;
+export default stepPueblo;

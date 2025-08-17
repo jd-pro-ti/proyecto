@@ -1,18 +1,18 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { pueblosMagicos } from '../../data/pueblosMagicos';
-import pueblos from '../../data/pueblos';
-import playas from '../../data/playas';
+import { pueblosMagicos } from '../../../data/pueblosMagicos';
+import pueblos from '../../../data/pueblos';
+import playas from '../../../data/playas';
 import { 
   BotonCerrar, 
   BotonVolver, 
   BotonSiguiente, 
   ContenedorBotones, 
   Espaciador 
-} from '../WizardExperincia/Steps/botones';
+} from './botones';
 
-export default function RenderDestino({ datos, onSiguiente, onVolver, onClose }) {
+export default function stepDestino({ datos, onSiguiente, onVolver, onClose }) {
   
 
   const [seleccion, setSeleccion] = useState(datos.destino);

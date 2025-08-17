@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { BotonCerrar } from './modals/botones';
+import { BotonCerrar } from './WizardExperincia/Steps/botones';
 import { pueblosMagicos } from '../data/pueblosMagicos';
 import pueblos from '../data/pueblos';
 import playas from '../data/playas';
