@@ -6,19 +6,15 @@ import StepPueblos from './Steps/stepPueblos';
 import StepDestino from './Steps/stepDestino';
 import StepHospedaje from './Steps/stepHospedaje';
 import StepHoteles from './Steps/stepHoteles';
-import StepHabitaciones from './Steps/stepHabitaciones'; // 👈 ojo al nombre
+import StepHabitaciones from './Steps/stepHabitaciones'; 
 import StepEventos from './Steps/stepEventos';
 import StepDespedida from './Steps/stepDespedida';
 
 const WizarSteps = React.memo(function ModalFlujo({ show, onClose }) {
   if (!show) return null;
 
-  const [paso, setPaso] = useState(1); // 0 = StepInicio
-  const [saltadoHospedaje, setSaltadoHospedaje] = useState(false);
-  const [saltadoHoteles, setSaltadoHoteles] = useState(false);
-  const yaSaltado = useRef(false);
-
-  const [datosCompartidos, setDatosCompartidos] = useState({
+  // Estado inicial de datosCompartidos
+  const estadoInicialDatos = {
     categoria: null,
     destino: null,
     tipoViaje: null,
@@ -31,11 +27,30 @@ const WizarSteps = React.memo(function ModalFlujo({ show, onClose }) {
     seleccion: null,
     subCategoria: null,
     destinoInput: null,
-  });
+  };
 
-  // Orden de pasos por arreglo
+  // Estado principal
+  const [paso, setPaso] = useState(1); // default = StepInicio
+  const [saltadoHospedaje, setSaltadoHospedaje] = useState(false);
+  const [saltadoHoteles, setSaltadoHoteles] = useState(false);
+  const yaSaltado = useRef(false);
+
+  const [datosCompartidos, setDatosCompartidos] = useState(estadoInicialDatos);
+
+  // 🔹 Reiniciar estados cuando se llegue a StepInicio
+  useEffect(() => {
+    if (paso === 1) {
+      setDatosCompartidos(estadoInicialDatos);
+      setSaltadoHospedaje(false);
+      setSaltadoHoteles(false);
+      yaSaltado.current = false;
+      console.log(yaSaltado)
+    }
+  }, [paso]);
+
+  // Definición de pasos
   const pasos = [
-    StepPueblos, 
+    StepPueblos,        // 0
     StepInicio,         // 1
     StepDestino,        // 2
     StepHospedaje,      // 3
@@ -45,65 +60,89 @@ const WizarSteps = React.memo(function ModalFlujo({ show, onClose }) {
     StepDespedida,      // 7
   ];
 
+  // 🔹 Si la categoría es "pueblos", arrancar en paso 0
+  useEffect(() => {
+    if (datosCompartidos.categoria?.toLowerCase() === "pueblos" && paso !== 0) {
+      setPaso(0);
+    }
+  }, [datosCompartidos.categoria]);
+
   // Si ya viene un destino/categoría precargado, saltar directo a Hospedaje
   useEffect(() => {
     if (!yaSaltado.current && datosCompartidos.destinoInput) {
       yaSaltado.current = true;
-      setDatosCompartidos(prev => ({
-        ...prev,
-        destino: prev.destinoInput.nombre || prev.destinoInput,
-        categoria: prev.destinoInput.categoria || prev.categoria,
-      }));
-      setPaso(3); // StepHospedaje
+    console.log(yaSaltado)
+      setDatosCompartidos(prev => {
+        const nuevos = {
+          ...prev,
+          destino: prev.destinoInput.nombre || prev.destinoInput,
+          categoria: prev.destinoInput.categoria || prev.categoria,
+        };
+          setPaso(3);
+        
+
+        return nuevos;
+      });
     }
   }, [datosCompartidos.destinoInput]);
 
-  const handleSiguiente = (nuevosDatos = {}) => {
-    setDatosCompartidos(prev => {
-      const nuevos = { ...prev, ...nuevosDatos };
+ const [pasoAnterior, setPasoAnterior] = useState(null);
 
-      if (nuevos.destino && nuevos.categoria) {
-        nuevos.destinoInput = {
-          nombre: nuevos.destino?.nombre || nuevos.destino,
-          categoria: nuevos.categoria,
-        };
-      }
+const handleSiguiente = (nuevosDatos = {}) => {
+  setDatosCompartidos(prev => {
+    const nuevos = { ...prev, ...nuevosDatos };
 
-      let siguientePaso = paso + 1;
-
-      // Desde StepHospedaje (3): si no necesita hospedaje, saltar a Eventos (6)
-      if (paso === 3 && nuevos.necesitaHospedaje === false) {
-        siguientePaso = 6;
-        setSaltadoHospedaje(true);
-      } else {
-        setSaltadoHospedaje(false);
-      }
-
-      // Desde StepHoteles (4): si no hay hoteles, saltar a Eventos (6)
-      if (paso === 4 && nuevos.sinHoteles) {
-        siguientePaso = 6;
-        setSaltadoHoteles(true);
-      } else {
-        setSaltadoHoteles(false);
-      }
-
-      setPaso(siguientePaso);
-      return nuevos;
-    });
-  };
-
-  const handleVolver = () => {
-    if (paso === 1) return onClose();
-
-    // Si estamos en Eventos (6), regresar al paso correcto según los saltos
-    if (paso === 6) {
-      if (saltadoHoteles) return setPaso(4);   // volver a Hoteles
-      if (saltadoHospedaje) return setPaso(3); // volver a Hospedaje
-      return setPaso(5);                       // si no hubo saltos, a Habitaciones
+    if (nuevos.destino && nuevos.categoria) {
+      nuevos.destinoInput = {
+        nombre: nuevos.destino?.nombre || nuevos.destino,
+        categoria: nuevos.categoria,
+      };
     }
 
-    setPaso(p => p - 1);
-  };
+    let siguientePaso = paso + 1;
+
+    if (paso === 0) {
+      siguientePaso = 2;
+    }
+
+    if (paso === 3 && nuevos.necesitaHospedaje === false) {
+      siguientePaso = 6;
+      setSaltadoHospedaje(true);
+    } else {
+      setSaltadoHospedaje(false);
+    }
+
+    if (paso === 4 && nuevos.sinHoteles) {
+      siguientePaso = 6;
+      setSaltadoHoteles(true);
+    } else {
+      setSaltadoHoteles(false);
+    }
+
+    // 🔹 Guardar de dónde viene
+    setPasoAnterior(paso);
+    setPaso(siguientePaso);
+    return nuevos;
+  });
+};
+
+const handleVolver = () => {
+  if (paso === 1) return onClose();
+  if (yaSaltado.current && paso === 3) return setPaso(1);
+  if (paso === 0) return setPaso(1);
+
+  // 🔹 Solo regresar a 0 si efectivamente vienes de 0
+  if (paso === 2 && pasoAnterior === 0) return setPaso(0);
+
+  if (paso === 6) {
+    if (saltadoHoteles) return setPaso(4);
+    if (saltadoHospedaje) return setPaso(3);
+    return setPaso(5);
+  }
+
+  setPaso(p => p - 1);
+};
+
 
   const PasoActual = pasos[paso];
 

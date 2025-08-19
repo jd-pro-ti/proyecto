@@ -6,7 +6,7 @@ import { pueblosMagicos } from '../../../data/pueblosMagicos';
 import pueblos from '../../../data/pueblos';
 import playas from '../../../data/playas';
 
-const StepsInicio = React.memo(function StepsInicio({ onClose, onSiguiente }) {
+const StepInicio = React.memo(function StepInicio({ datos, onSiguiente, onVolver, onClose }) {
   const [inputValue, setInputValue] = useState('');
 
   // Combinar destinos
@@ -47,7 +47,7 @@ const StepsInicio = React.memo(function StepsInicio({ onClose, onSiguiente }) {
     onSiguiente({
       categoria: lugar.categoria,
       destino: lugar.nombre,
-      seleccion: lugar.categoria, // guardamos la categoría seleccionada
+      seleccion: lugar.categoria,
     });
   };
 
@@ -55,19 +55,19 @@ const StepsInicio = React.memo(function StepsInicio({ onClose, onSiguiente }) {
   const handleSelect = (categoria) => {
     onSiguiente({
       categoria,
-      seleccion: categoria, // guardamos también cuando se elige manual
+      seleccion: categoria,
     });
   };
 
   return (
-    <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 w-full max-w-2xl shadow-xl transform transition-all duration-300 mx-4">
+    <div className="relative">
       {/* Botón de cerrar */}
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-0 right-0">
         <BotonCerrar onClick={onClose} />
       </div>
 
-      <div className="text-center mb-6 md:mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-[#1C3458]">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">
           ¿Cuál es tu próximo destino?
         </h2>
       </div>
@@ -78,16 +78,16 @@ const StepsInicio = React.memo(function StepsInicio({ onClose, onSiguiente }) {
         placeholder="Busca tu destino..."
         value={inputValue}
         onChange={handleInput}
-        className="w-full border-2 text-base md:text-lg text-black border-[#6A7282] rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-[#6A7282]"
+        className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
       />
 
       {/* Resultados */}
       {filtered.length > 0 && (
-        <div className="bg-[#6A7282]/10 rounded-md p-2 mb-4 max-h-48 overflow-y-auto text-black">
+        <div className="bg-gray-100 rounded-lg p-2 mb-4 max-h-48 overflow-y-auto">
           {filtered.map((lugar, idx) => (
             <div
               key={idx}
-              className="p-2 cursor-pointer hover:bg-[#6A7282]/20 rounded flex gap-2 items-center"
+              className="p-2 cursor-pointer hover:bg-gray-200 rounded flex gap-2 items-center"
               onClick={() => handleAutoSelect(lugar)}
             >
               <div>
@@ -101,40 +101,42 @@ const StepsInicio = React.memo(function StepsInicio({ onClose, onSiguiente }) {
         </div>
       )}
 
-      <p className="text-center text-lg md:text-xl text-[#6A7282] mb-4 md:mb-6">
+      <p className="text-center text-gray-600 mb-6">
         O descubre una experiencia personalizada para ti
       </p>
 
       {/* Botones de categorías */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 lg:gap-6 px-4">
+      <div className="grid grid-cols-3 gap-4 px-4">
         <button
           onClick={() => handleSelect('pueblosMagicos')}
-          className="flex flex-col items-center gap-2 bg-white hover:bg-amber-50 border-2 border-amber-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
+          className="flex flex-col items-center gap-2 bg-white hover:bg-amber-50 border border-amber-200 rounded-lg p-4 transition-all hover:shadow cursor-pointer"
         >
-          <img src="/imagenes/puebloMa.svg" alt="Pueblos mágicos" className="w-16 h-16" />
-          <span className="text-base font-medium text-[#6A7282]">
+          <img src="/imagenes/puebloMa.svg" alt="Pueblos mágicos" className="w-12 h-12" />
+          <span className="text-sm font-medium text-gray-700">
             Pueblos Mágicos
           </span>
         </button>
 
         <button
           onClick={() => handleSelect('playas')}
-          className="flex flex-col items-center gap-2 bg-white hover:bg-blue-50 border-2 border-blue-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
+          className="flex flex-col items-center gap-2 bg-white hover:bg-blue-50 border border-blue-200 rounded-lg p-4 transition-all hover:shadow cursor-pointer"
         >
-          <img src="/imagenes/playas.svg" alt="Playas" className="w-16 h-16" />
-          <span className="text-base font-medium text-[#6A7282]">Playas</span>
+          <img src="/imagenes/playas.svg" alt="Playas" className="w-12 h-12" />
+          <span className="text-sm font-medium text-gray-700">Playas</span>
         </button>
 
         <button
           onClick={() => handleSelect('pueblos')}
-          className="flex flex-col items-center gap-2 bg-white hover:bg-purple-50 border-2 border-purple-100 rounded-xl p-4 transition-all hover:shadow-md cursor-pointer"
+          className="flex flex-col items-center gap-2 bg-white hover:bg-purple-50 border border-purple-200 rounded-lg p-4 transition-all hover:shadow cursor-pointer"
         >
-          <img src="/imagenes/pueblo.svg" alt="Pueblos" className="w-16 h-16" />
-          <span className="text-base font-medium text-[#6A7282]">Pueblos</span>
+          <img src="/imagenes/pueblo.svg" alt="Pueblos" className="w-12 h-12" />
+          <span className="text-sm font-medium text-gray-700">Pueblos</span>
         </button>
       </div>
+
+      
     </div>
   );
 });
 
-export default StepsInicio;
+export default StepInicio;
