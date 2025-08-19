@@ -1,14 +1,32 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
+
+export function useBoton({ initialDisabled = false, onClick } = {}) {
+  const [disabled, setDisabled] = useState(initialDisabled);
+
+  const handleClick = useCallback(
+    (e) => {
+      if (!disabled && onClick) onClick(e);
+    },
+    [disabled, onClick]
+  );
+
+  return {
+    disabled,
+    setDisabled,
+    handleClick,
+  };
+}
 
 export function BotonVolver({ onClick }) {
+  const { handleClick } = useBoton({ onClick });
+
   return (
     <button
       type="button"
-      onClick={onClick}
-      className="flex items-center gap-2 p-2 text-[#059669] rounded-full hover:bg-gray-100 transition-all 
-                duration-300 ease-in-out transform hover:-translate-x-1 active:scale-95 cursor-pointer"
+      onClick={handleClick}
+      className="flex items-center gap-2 p-2 text-[#059669] rounded-full hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:-translate-x-1 active:scale-95 cursor-pointer"
       aria-label="Volver"
     >
       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -19,15 +37,18 @@ export function BotonVolver({ onClick }) {
   );
 }
 
-export function BotonSiguiente({ onClick, disabled = false }) {
+export function BotonSiguiente({ onClick, initialDisabled = false }) {
+  const { disabled, handleClick } = useBoton({ initialDisabled, onClick });
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       disabled={disabled}
       className={`flex items-center gap-2 p-2 rounded-full transition-all duration-300 ease-in-out 
-                ${disabled ? 'text-gray-400 cursor-not-allowed' : 
-                  'text-[#059669] hover:bg-green-50 hover:shadow-md transform hover:translate-x-1 cursor-pointer active:scale-95'}
+                ${disabled
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-[#059669] hover:bg-green-50 hover:shadow-md transform hover:translate-x-1 cursor-pointer active:scale-95'}
                 relative overflow-hidden group`}
       aria-label="Siguiente"
     >
@@ -43,26 +64,27 @@ export function BotonSiguiente({ onClick, disabled = false }) {
 }
 
 export function BotonCerrar({ onClick }) {
+  const { handleClick } = useBoton({ onClick });
+
   return (
     <button
-      onClick={onClick}
-      className="p-2 text-[#364153]  hover:text-[#EA5261] rounded-full hover:bg-red-50 transition-all 
-                 duration-300 ease-in-out transform hover:scale-110 active:scale-95 cursor-pointer"
+      onClick={handleClick}
+      className="p-2 text-[#364153] hover:text-[#EA5261] rounded-full hover:bg-red-50 transition-all duration-300 ease-in-out transform hover:scale-110 active:scale-95 cursor-pointer"
       aria-label="Cerrar"
     >
       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+        <path
+          fillRule="evenodd"
+          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+          clipRule="evenodd"
+        />
       </svg>
     </button>
   );
 }
 
 export function ContenedorBotones({ children }) {
-  return (
-    <div className="flex justify-between items-center mt-6 p-2 bg-gray-50 rounded-lg">
-      {children}
-    </div>
-  );
+  return <div className="flex justify-between items-center mt-6 p-2 bg-gray-50 rounded-lg">{children}</div>;
 }
 
 export function Espaciador() {

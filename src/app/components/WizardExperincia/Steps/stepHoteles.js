@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { alojamientos } from '../../../data/alojamientos';
 import { 
   BotonCerrar, 
@@ -10,33 +10,54 @@ import {
   Espaciador 
 } from './botones';
 
-export default function StepHoteles({ datos, onSiguiente, onVolver, onClose }) {
-  const [hotelSeleccionado, setHotelSeleccionado] = useState(datos.hotel);
-  
-  const hotelesFiltrados = datos.destino 
-    ? alojamientos.filter(hotel => 
-        hotel.municipio.toLowerCase() === datos.destino.toLowerCase())
-    : [];
+function useHoteles({ destino, hotelInicial }) {
+  const [hotelSeleccionado, setHotelSeleccionado] = useState(hotelInicial || null);
 
+  // Filtrar hoteles por destino
+  const hotelesFiltrados = useMemo(() => {
+    if (!destino) return [];
+    return alojamientos.filter(hotel => hotel.municipio.toLowerCase() === destino.toLowerCase());
+  }, [destino]);
+
+  // Toggle selección
   const toggleHotel = (hotelNombre) => {
     setHotelSeleccionado(prev => prev === hotelNombre ? null : hotelNombre);
   };
 
-  const handleSiguiente = () => {
+  // Obtener datos para siguiente paso
+  const getSeleccion = () => {
     if (hotelesFiltrados.length === 0) {
-      onSiguiente({ hotel: null, sinHoteles: true });
-      return;
+      return { hotel: null, sinHoteles: true };
     }
+    return { hotel: hotelSeleccionado, sinHoteles: false };
+  };
 
-    if (!hotelSeleccionado) return;
-    onSiguiente({ hotel: hotelSeleccionado, sinHoteles: false });
+  return {
+    hotelSeleccionado,
+    hotelesFiltrados,
+    toggleHotel,
+    getSeleccion
+  };
+}
+
+// Componente StepHoteles
+export default function StepHoteles({ datos, onSiguiente, onVolver, onClose }) {
+  const { hotelSeleccionado, hotelesFiltrados, toggleHotel, getSeleccion } = useHoteles({
+    destino: datos.destino,
+    hotelInicial: datos.hotel
+  });
+
+  const handleSiguiente = () => {
+    const seleccion = getSeleccion();
+    if (!seleccion.hotel && !seleccion.sinHoteles) return; // Evita avanzar sin seleccionar
+    onSiguiente(seleccion);
   };
 
   return (
     <div className="relative p-4 md:p-6 w-full max-w-full md:max-w-4xl mx-auto">
       {/* Encabezado responsivo */}
       <div className="relative mb-4 md:mb-6 text-center">
-        <div className="px-10 sm:px-0"> {/* Padding para evitar superposición con botón */}
+        <div className="px-10 sm:px-0">
           <h2 className="text-xl sm:text-2xl font-bold text-[#364153]">Hoteles en {datos.destino}</h2>
           <p className="text-[#6A7282] mt-1 text-sm">Elige tu alojamiento ideal</p>
         </div>

@@ -9,22 +9,20 @@ export default function Modal() {
 
   return (
     <>
-      <Button
-        text="Comienza tu aventura"
-        variant="secondary"
-        size="sm"
-        className="cursor-pointer"
+      <button
         onClick={() => {
-          console.log("Mostrar modal");
-          setShowInicio(true);
-        }}>
-            
-        </Button>
+          console.log("Mostrando wizard...");
+          setShowWizar(true); 
+        }}
+        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer text-sm"
+      >
+        Comienza tu aventura
+      </button>
 
       {showWizar && (
-        <WizarSteps
-          show={showWizar}
-          onClose={() => setShowWizar(false)}
+        <WizarSteps 
+          show={showWizar} 
+          onClose={() => setShowWizar(false)} 
         />
       )}
     </>

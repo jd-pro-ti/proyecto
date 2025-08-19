@@ -12,11 +12,47 @@ import {
   Espaciador 
 } from './botones';
 
-export default function stepDestino({ datos, onSiguiente, onVolver, onClose }) {
-  
+function useDestino({ categoria, subCategoria, destinoInicial }) {
+  const [seleccion, setSeleccion] = useState(destinoInicial || null);
 
-  const [seleccion, setSeleccion] = useState(datos.destino);
+  const dataMap = {
+    pueblosMagicos,
+    pueblos,
+    playas
+  };
 
+  // Lista filtrada según categoría y subcategoría
+  const datosLista = useMemo(() => {
+    if (categoria === 'pueblos' && subCategoria) {
+      return Object.entries(dataMap.pueblos).filter(
+        ([_, data]) => data.categoria === subCategoria
+      );
+    } else {
+      return Object.entries(dataMap[categoria] || {});
+    }
+  }, [categoria, subCategoria]);
+
+  // Función para seleccionar/deseleccionar un destino
+  const toggleSeleccion = (id) => {
+    setSeleccion(id);
+  };
+
+  // Función para obtener el nombre del destino seleccionado
+  const obtenerNombreSeleccion = () => {
+    const destinoSeleccionado = dataMap[categoria]?.[seleccion];
+    return destinoSeleccionado ? destinoSeleccionado.nombre : '';
+  };
+
+  return {
+    seleccion,
+    datosLista,
+    toggleSeleccion,
+    obtenerNombreSeleccion
+  };
+}
+
+// Componente StepDestino
+export default function StepDestino({ datos, onSiguiente, onVolver, onClose }) {
   const tituloMap = {
     pueblos: 'los pueblos',
     playas: 'playa',
@@ -26,45 +62,26 @@ export default function stepDestino({ datos, onSiguiente, onVolver, onClose }) {
   const categoriaActual = datos.categoria;
   const subcategoriaActual = datos.subCategoria;
 
-  const dataMap = {
-    pueblosMagicos,
-    pueblos,
-    playas
-  };
-
-  // Obtener datos según la categoría
-  const datosLista = useMemo(() => {
-    if (categoriaActual === 'pueblos' && subcategoriaActual) {
-      return Object.entries(dataMap.pueblos).filter(
-        ([_, data]) => data.categoria === subcategoriaActual
-      );
-    } else {
-      return Object.entries(dataMap[categoriaActual] || {});
-    }
-  }, [categoriaActual, subcategoriaActual]);
-
-  const toggleSeleccion = (id) => {
-    setSeleccion(id);
-  };
+  const { seleccion, datosLista, toggleSeleccion, obtenerNombreSeleccion } = useDestino({
+    categoria: categoriaActual,
+    subCategoria: subcategoriaActual,
+    destinoInicial: datos.destino
+  });
 
   const handleSiguiente = () => {
-    const destinoSeleccionado = dataMap[datos.categoria][seleccion];
-    const nombreDestino = destinoSeleccionado ? destinoSeleccionado.nombre : '';
-
-    onSiguiente({ 
-      destino: nombreDestino
-    });
+    const nombreDestino = obtenerNombreSeleccion();
+    onSiguiente({ destino: nombreDestino });
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0)] backdrop-blur-sm transition-opacity duration-500">
       <div className="bg-white rounded-2xl w-full max-w-3xl p-5 mx-auto">
-        {/* Encabezado CENTRADO */}
+        {/* Encabezado */}
         <div className="flex flex-col items-center mb-4 relative">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-[#364153]">¿A dónde desea ir?</h2>
             <p className="text-[#6A7282] mt-1 text-sm">
-              Selecciona un destino de {tituloMap[datos.categoria] || 'opciones'}
+              Selecciona un destino de {tituloMap[categoriaActual] || 'opciones'}
             </p>
           </div>
           <div className="absolute right-0 top-0">
