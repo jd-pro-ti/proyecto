@@ -81,7 +81,7 @@ export default function RenderFinal({ onClose, datos }) {
       </div>
 
       <div className="flex justify-center">
-        <button onClick={() => guardarExperiencia(datos)} className="relative overflow-hidden px-8 py-3 rounded-full font-semibold bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group">
+        <button onClick={onClose} className="relative overflow-hidden px-8 py-3 rounded-full font-semibold bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group">
           <span className="relative z-10">Salir</span>
           <span className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
         </button>

@@ -5,10 +5,11 @@ import { BotonCerrar } from './botones';
 import { pueblosMagicos } from '../../../data/pueblosMagicos';
 import pueblos from '../../../data/pueblos';
 import playas from '../../../data/playas';
+import { useWizard } from '../WizarProvider';
 
 const StepInicio = React.memo(function StepInicio({ datos, onSiguiente, onVolver, onClose }) {
   const [inputValue, setInputValue] = useState('');
-
+  const { yaSaltado, setYaSaltado } = useWizard();
   // Combinar destinos
   const allDestinos = useMemo(() => {
     const playasArray = Object.entries(playas).map(([slug, data]) => ({
@@ -42,20 +43,27 @@ const StepInicio = React.memo(function StepInicio({ datos, onSiguiente, onVolver
     setInputValue(e.target.value);
   };
 
-  // Selección automática (desde búsqueda)
+
   const handleAutoSelect = (lugar) => {
+    datos.yaSaltado=true
+
     onSiguiente({
       categoria: lugar.categoria,
       destino: lugar.nombre,
       seleccion: lugar.categoria,
+      
     });
   };
 
-  // Selección manual (categoría)
   const handleSelect = (categoria) => {
+    if(categoria==="pueblos"){
+      datos.subpueblos=true
+    }
+    
     onSiguiente({
       categoria,
       seleccion: categoria,
+      yaSaltado: false,
     });
   };
 

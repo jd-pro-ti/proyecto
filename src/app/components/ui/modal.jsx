@@ -1,29 +1,31 @@
 'use client';
 
-import React, { useState } from 'react';
-import WizarSteps from '../WizardExperincia/WizarSteps';
+import React, { useState, useCallback } from 'react';
+// ⬇️ Ajusta la ruta según tu carpeta:
+// si tu carpeta se llama "WizardExperincia" (con i), usa esa;
+// si la corriges a "WizardExperiencia", cambia la import.
+import {WizardProvider}  from '../WizardExperincia/WizarProvider';
+import Wizard from '../WizardExperincia/Wizard';
 
 export default function Modal() {
-  const [showWizar, setShowWizar] = useState(false);
+  const [open, setOpen] = useState(false);
 
+  const handleOpen = () => setOpen(true);
+  const handleClose = useCallback(() => setOpen(false), []);
 
   return (
     <>
       <button
-        onClick={() => {
-          console.log("Mostrando wizard...");
-          setShowWizar(true); 
-        }}
+        onClick={handleOpen}
         className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer text-sm"
       >
         Comienza tu aventura
       </button>
 
-      {showWizar && (
-        <WizarSteps 
-          show={showWizar} 
-          onClose={() => setShowWizar(false)} 
-        />
+      {open && (
+        <WizardProvider>
+          <Wizard show={open} onClose={handleClose} />
+        </WizardProvider>
       )}
     </>
   );
